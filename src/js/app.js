@@ -1,6 +1,6 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile} from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'firebase/auth';
 
 //FIREBASE AUTH ------------------------
 initializeApp(firebaseConfig);
@@ -12,32 +12,34 @@ const signUpEmail = document.querySelector('.signup-email');
 const signUpPassword = document.querySelector('.signup-password');
 const signUpFirstname = document.querySelector('#firstname');
 const signUpLastname = document.querySelector('#lastname');
-const signupButton = document.querySelector('.sign-up-button_submit');
+const signUpButton = document.querySelector('.sign-up-button_submit');
+const signUpForm = document.querySelector('.sign-up-form');
 
 const mainContentSection = document.querySelector('.main-content');
 const formSection = document.querySelector('.form-section');
 	
-const signUpUser =()=>{
-	const userFirstname = signUpFirstname.value.toLowerCase().trim();
-	const userLastname = signUpLastname.value.toLowerCase().trim();
-	const userEmail = signUpEmail.value.toLowerCase().trim();
-	const userPassword = signUpPassword.value.trim();
+const users = [];
 
-	const newUser = {
-		firstname: userFirstname,
-		lastname: userLastname,
-		email: userEmail,
-		password: userPassword
+const signUpUser =()=>{
+	let newUser = {
+		firstname: signUpFirstname.value.toLowerCase().trim(),
+		lastname: signUpLastname.value.toLowerCase().trim(),
+		email: signUpEmail.value.toLowerCase().trim(),
+		password: signUpPassword.value.trim()
 	}
-	createUserWithEmailAndPassword(authService, userEmail, userPassword)
-	.then(()=>{
+	createUserWithEmailAndPassword(authService, newUser.email, newUser.password)
+	.then((userCredential)=>{
 		console.log('The user has successfully signed up');
+		newUser = {...newUser, id: userCredential.user.uid}
+		users.push(newUser);
+		console.log(users);
+		signUpForm.reset();
 		mainContentSection.style.display = 'block';
 		formSection.style.display = 'none';
 	}).catch(err => console.log(err.message));
 };
 
-signupButton.addEventListener('click', (e)=>{
+signUpButton.addEventListener('click', (e)=>{
 	e.preventDefault();
 	signUpUser();
 })
@@ -46,13 +48,20 @@ signupButton.addEventListener('click', (e)=>{
 const signInEmail = document.querySelector('.signin-email');
 const signInPassword = document.querySelector('.signin-password');
 const signInButton = document.querySelector('.sign-in-button_submit');
+const signInForm = document.querySelector('.sign-in-form');
 
 const signInUser =()=>{
 	const userEmail = signInEmail.value.toLowerCase().trim();
 	const userPassword = signInPassword.value.trim();
 	signInWithEmailAndPassword(authService, userEmail, userPassword)
-	.then(()=>{
+	.then((userCredential)=>{
 		console.log('The user has successfully signed in');
+		const signedInUserID = userCredential.user.uid;
+		const userFromArray = users.find(user => user.id === signedInUserID);
+		if(userFromArray){
+			console.log(userFromArray.firstname);
+		}
+		signInForm.reset();
 		mainContentSection.style.display = 'block';
 		formSection.style.display = 'none';
 	}).catch(err => console.log(err.message));
