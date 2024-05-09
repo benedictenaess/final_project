@@ -33,9 +33,12 @@ const signUpUser =()=>{
 		newUser = {...newUser, id: userCredential.user.uid}
 		users.push(newUser);
 		console.log(users);
-		signUpForm.reset();
+
+		renderUserName(newUser.firstname, newUser.lastname);
+
 		mainContentSection.style.display = 'block';
 		formSection.style.display = 'none';
+		signUpForm.reset();
 	}).catch(err => console.log(err.message));
 };
 
@@ -59,7 +62,7 @@ const signInUser =()=>{
 		const signedInUserID = userCredential.user.uid;
 		const userFromArray = users.find(user => user.id === signedInUserID);
 		if(userFromArray){
-			console.log(userFromArray.firstname);
+			renderUserName(userFromArray.firstname, userFromArray.lastname);
 		}
 		signInForm.reset();
 		mainContentSection.style.display = 'block';
@@ -74,6 +77,10 @@ signInButton.addEventListener('click', (e)=>{
 
 //SIGN OUT ------------------------
 const signOutButton = document.querySelector('.sign-out-button');
+const signInFormVisibility = document.querySelector('.signin-form_visibility');
+const signUpFormVisibility = document.querySelector('.signup-form_visibility');
+
+const userNameElement = document.createElement('h1');
 
 const signOutUser =()=>{
 	signOut(authService)
@@ -81,6 +88,11 @@ const signOutUser =()=>{
 		console.log('The user has succsessfully signed out');
 		mainContentSection.style.display = 'none';
 		formSection.style.display = 'block';
+
+		signInFormVisibility.style.display = 'block';
+		signUpFormVisibility.style.display = 'none';
+
+		userNameElement.textContent = '';
 	}).catch(err => console.log(err.message));
 };
 
@@ -89,12 +101,17 @@ signOutButton.addEventListener('click', (e)=>{
 	signOutUser();
 })
 
+//RENDER USER NAME ON FRONTPAGE ----------------------------------
+function renderUserName(firstname, lastname){
+	userNameElement.classList.add('render-username');
+	userNameElement.textContent = `Welcome ${firstname} ${lastname}`;
+	mainContentSection.append(userNameElement);
+}
+
 //TOGGLE SIGN IN/SIGN UP --------------------
 
 const signInToggle = document.querySelector('.signin-form_button');
 const signUpToggle = document.querySelector('.signup-form_button');
-const signInFormVisibility = document.querySelector('.signin-form_visibility');
-const signUpFormVisibility = document.querySelector('.signup-form_visibility');
 
 function toggleFormVisibility(formVisible, formHidden){
 	formVisible.style.display = 'block';
@@ -110,3 +127,4 @@ signUpToggle.addEventListener('click', (e)=>{
 	e.preventDefault();
 	toggleFormVisibility(signUpFormVisibility, signInFormVisibility);
 });
+

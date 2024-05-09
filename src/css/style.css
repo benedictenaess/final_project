@@ -104,3 +104,9 @@ header {
 	width: 100%;
 	height: 100vh;
 }
+
+.render-username {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
