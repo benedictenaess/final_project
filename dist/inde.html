@@ -3,9 +3,70 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>Final Project: Movie Database</title>
+	<link rel="stylesheet" href="../src/css/style.css">
 </head>
 <body>
+	<header>
+		<span class="header-logo">Movie Database</span>
+		<button class="header-button sign-out-button">Sign out</button>
+	</header>
 	
+	<section class="form-section">
+		<div class="form-section-container">
+			<div class="all-forms-container">
+				<div class="change-form-buttons">
+					<button class="signin-form_button">Sign in</button>
+					<button class="signup-form_button">Sign up</button>
+				</div>
+				
+				<div class="signin-form_visibility">
+					<form class="sign-in-form">
+						<div>
+							<label for="signin-email">Email</label>
+							<input class="signin-email" type="email" id="signin-email" name="signin-email">
+						</div>
+						<div>
+							<label for="signin-password">Create Password</label>
+							<input class="signin-password" type="password" id="signin-password" name="signin-password">
+						</div>
+						<div class="sign-in-button_container">
+							<button class="sign-in-button_submit">Sign In</button>
+						</div>
+					</form>
+				</div>
+				
+				<div class="signup-form_visibility">
+					<form class="sign-up-form">
+						<div>
+							<label for="firstname">Firstname</label>
+							<input type="text" id="firstname" name="firstname">
+						</div>
+						<div>
+							<label for="lastname">Lastname</label>
+							<input type="text" id="lastname" name="lastname">
+						</div>
+						<div>
+							<label for="signup-email">Email</label>
+							<input class="signup-email" type="email" id="signup-email" name="signup-email">
+						</div>
+						<div>
+							<label for="signup-password">Create Password</label>
+							<input class="signup-password" type="password" id="signup-password" name="signup-password">
+						</div>
+						<div class="sign-up-button_container">
+							<button class="sign-up-button_submit">Sign Up</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+		
+	<section class="main-content">
+		<h1>main content</h1>
+		
+	</section>
+	<script src="bundle.js"></script>
 </body>
 </html>
