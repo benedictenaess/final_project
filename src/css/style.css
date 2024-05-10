@@ -3,6 +3,11 @@
 	margin: 0;
 	padding: 0;
 	font-family: Arial, Helvetica, sans-serif;
+	color: var(--color-primary);
+}
+
+body {
+	background-color: var(--color-secondary);
 }
 
 button {
@@ -15,12 +20,36 @@ header {
 	justify-content: space-between;
 	width: 100%;
 	height: 4rem;
-	background-color: lightseagreen;
 	padding: 0rem 2rem;
 }
 
+.header-logo {
+	color: var(--color-primary);
+	font-size: var(--font-size-small);
+}
+
+.header-page-button {
+	display: flex;
+	justify-content: space-between;
+	width: 50%;
+	background-color: var(--color-accent-1);
+	padding: 0.5rem 2rem;
+	border-radius: var(--border-radius);
+}
+
+.header-page-button button {
+	background-color: transparent;
+	border: none;
+	color: var(--color-accent-3);
+	font-size: var(--font-size-small);
+}
+
 .sign-out-button {
-	display: none;
+	visibility: hidden;
+	background-color: transparent;
+	border: none;
+	color: var(--primary-color);
+	font-size: var(--font-size-small);
 }
 
 /* SIGN-UP/IN FORM ----------------------------------*/
@@ -57,11 +86,15 @@ header {
 }
 
 .signin-form_button {
-	background-color: lightseagreen;
+	background-color: var(--color-accent-1);
+	color: var(--color-secondary);
+	border-radius: var(--border-radius) 0 0 0;
 }
 
 .signup-form_button {
-	background-color: seagreen;
+	background-color: var(--color-accent-2);
+	color: var(--color-primary);
+	border-radius: 0 var(--border-radius) 0 0;
 }
 
 .signin-form_visibility {
@@ -82,7 +115,9 @@ header {
 	gap: 1.5rem;
 	height: 100%;
 	padding: 2rem 5rem;
-	background-color: lightseagreen;
+	background-color: var(--color-accent-1);
+	color: var(--color-accent-3);
+	border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 .sign-in-form div {
@@ -104,11 +139,23 @@ header {
 	margin: 0 auto;
 }
 
+.sign-in-button_submit,
+.sign-up-button_submit {
+	background-color: transparent;
+	border: none;
+	color: var(--color-accent-3);
+}
+
+label {
+	color: var(--color-secondary);
+}
+
 /* MAIN CONTENT HOMEPAGE --------------------------------- */
 .main-content {
 	display: none;
 	width: 100%;
 	height: 100vh;
+	font-size: var(--font-size-extra-large);
 }
 
 .render-username {

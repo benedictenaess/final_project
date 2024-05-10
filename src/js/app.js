@@ -117,7 +117,7 @@ function signInDisplay(){
 	signUpForm.reset();
 	mainContentSection.style.display = 'block';
 	formSection.style.display = 'none';
-	signOutButton.style.display = 'block';
+	signOutButton.style.visibility = 'visible';
 }
 
 function signOutDisplay(){
@@ -125,7 +125,7 @@ function signOutDisplay(){
 	formSection.style.display = 'block';
 	signInFormVisibility.style.display = 'block';
 	signUpFormVisibility.style.display = 'none';
-	signOutButton.style.display = 'none';
+	signOutButton.style.visibility = 'hidden';
 	userNameElement.textContent = '';
 }
 
@@ -134,19 +134,23 @@ function signOutDisplay(){
 const signInToggle = document.querySelector('.signin-form_button');
 const signUpToggle = document.querySelector('.signup-form_button');
 
-function toggleFormVisibility(formVisible, formHidden){
+function toggleFormVisibility(formVisible, formHidden, buttonActive, buttonInactive){
 	formVisible.style.display = 'block';
 	formHidden.style.display = 'none';
+	buttonActive.style.backgroundColor = 'var(--color-accent-1)';
+	buttonActive.style.color = 'var(--color-secondary)';
+	buttonInactive.style.backgroundColor = 'var(--color-accent-2)';
+	buttonInactive.style.color = 'var(--color-primary)';
 };
 
 signInToggle.addEventListener('click', (e)=>{
 	e.preventDefault();
-	toggleFormVisibility(signInFormVisibility, signUpFormVisibility);
+	toggleFormVisibility(signInFormVisibility, signUpFormVisibility, signInToggle, signUpToggle);
 });
 
 signUpToggle.addEventListener('click', (e)=>{
 	e.preventDefault();
-	toggleFormVisibility(signUpFormVisibility, signInFormVisibility);
+	toggleFormVisibility(signUpFormVisibility, signInFormVisibility, signUpToggle, signInToggle);
 });
 
 onAuthStateChanged(authService, (user)=>{
