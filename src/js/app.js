@@ -1,11 +1,12 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'firebase/auth';
+import {collection, getFirestore} from 'firebase/firestore';
 
-//FIREBASE AUTH ------------------------
+//INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
 initializeApp(firebaseConfig);
-
 const authService = getAuth();
+const database = getFirestore();
 
 //SIGN UP ------------------------
 const signUpEmail = document.querySelector('.signup-email');
@@ -17,8 +18,10 @@ const signUpForm = document.querySelector('.sign-up-form');
 
 const mainContentSection = document.querySelector('.main-content');
 const formSection = document.querySelector('.form-section');
+const signOutButton = document.querySelector('.sign-out-button');
 	
 const users = [];
+let isLoggedIn = false;
 
 const signUpUser =()=>{
 	let newUser = {
@@ -35,10 +38,8 @@ const signUpUser =()=>{
 		console.log(users);
 
 		renderUserName(newUser.firstname, newUser.lastname);
-
-		mainContentSection.style.display = 'block';
-		formSection.style.display = 'none';
-		signUpForm.reset();
+		isLoggedIn = true;
+		changingStyleDispaly(signUpForm);
 	}).catch(err => console.log(err.message));
 };
 
@@ -64,9 +65,8 @@ const signInUser =()=>{
 		if(userFromArray){
 			renderUserName(userFromArray.firstname, userFromArray.lastname);
 		}
-		signInForm.reset();
-		mainContentSection.style.display = 'block';
-		formSection.style.display = 'none';
+		isLoggedIn = true;
+		changingStyleDispaly(signInForm);
 	}).catch(err => console.log(err.message));
 };
 
@@ -76,23 +76,16 @@ signInButton.addEventListener('click', (e)=>{
 })
 
 //SIGN OUT ------------------------
-const signOutButton = document.querySelector('.sign-out-button');
 const signInFormVisibility = document.querySelector('.signin-form_visibility');
 const signUpFormVisibility = document.querySelector('.signup-form_visibility');
 
-const userNameElement = document.createElement('h1');
 
 const signOutUser =()=>{
 	signOut(authService)
 	.then(()=>{
 		console.log('The user has succsessfully signed out');
-		mainContentSection.style.display = 'none';
-		formSection.style.display = 'block';
-
-		signInFormVisibility.style.display = 'block';
-		signUpFormVisibility.style.display = 'none';
-
-		userNameElement.textContent = '';
+		isLoggedIn = false;
+		changingStyleDispaly();
 	}).catch(err => console.log(err.message));
 };
 
@@ -102,13 +95,34 @@ signOutButton.addEventListener('click', (e)=>{
 })
 
 //RENDER USER NAME ON FRONTPAGE ----------------------------------
+const userNameElement = document.createElement('h1');
+
 function renderUserName(firstname, lastname){
 	userNameElement.classList.add('render-username');
 	userNameElement.textContent = `Welcome ${firstname} ${lastname}`;
 	mainContentSection.append(userNameElement);
 }
 
-//TOGGLE SIGN IN/SIGN UP --------------------
+//CHANGING DISPLAY BLOCK/NONE ------------------------------------------
+function changingStyleDispaly(form) {
+	if(isLoggedIn){
+		form.reset();
+		mainContentSection.style.display = 'block';
+		formSection.style.display = 'none';
+		signOutButton.style.display = 'block';
+	} else {
+		mainContentSection.style.display = 'none';
+		formSection.style.display = 'block';
+
+		signInFormVisibility.style.display = 'block';
+		signUpFormVisibility.style.display = 'none';
+
+		signOutButton.style.display = 'none';
+		userNameElement.textContent = '';
+	}
+}
+
+//TOGGLE SIGN IN/SIGN UP -----------------------------------------------
 
 const signInToggle = document.querySelector('.signin-form_button');
 const signUpToggle = document.querySelector('.signup-form_button');
@@ -128,3 +142,6 @@ signUpToggle.addEventListener('click', (e)=>{
 	toggleFormVisibility(signUpFormVisibility, signInFormVisibility);
 });
 
+//ACCESS USERS IN FIRESTORE
+
+const usersCollection = collection(database, 'users');

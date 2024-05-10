@@ -19,6 +19,10 @@ header {
 	padding: 0rem 2rem;
 }
 
+.sign-out-button {
+	display: none;
+}
+
 /* SIGN-UP/IN FORM ----------------------------------*/
 
 .form-section {
