@@ -1,7 +1,7 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'firebase/auth';
-import {collection, getFirestore, addDoc} from 'firebase/firestore';
+import {collection, getFirestore, addDoc, getDocs} from 'firebase/firestore';
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
 initializeApp(firebaseConfig);
@@ -22,7 +22,7 @@ const mainContentSection = document.querySelector('.main-content');
 const formSection = document.querySelector('.form-section');
 const signOutButton = document.querySelector('.sign-out-button');
 
-const users = [];
+// const users = [];
 let isLoggedIn = false;
 
 const signUpUser = async ()=>{
@@ -34,11 +34,10 @@ const signUpUser = async ()=>{
 		password: signUpPassword.value.trim()
 	}
 	try {
-		const userCredential = await createUserWithEmailAndPassword(authService, newUser.email, newUser.password)
+		const userCredential = await createUserWithEmailAndPassword(authService, newUser.email, newUser.password);
 		console.log('The user has successfully signed up');
 		newUser = {...newUser, id: userCredential.user.uid};
-		users.push(newUser);
-		console.log(users);
+		// users.push(newUser);
 		renderUserName(newUser.firstname, newUser.lastname);
 		isLoggedIn = true;
 		changingStyleDispaly(signUpForm);
@@ -69,17 +68,19 @@ const signInUser = async ()=>{
 	const userEmail = signInEmail.value.toLowerCase().trim();
 	const userPassword = signInPassword.value.trim();
 	try {
-		const userCredential = signInWithEmailAndPassword(authService, userEmail, userPassword)
+		const userCredential = await signInWithEmailAndPassword(authService, userEmail, userPassword);
 		console.log('The user has successfully signed in');
+
 		const signedInUserID = userCredential.user.uid;
-		const userFromArray = users.find(user => user.id === signedInUserID);
-		if(userFromArray){
-			renderUserName(userFromArray.firstname, userFromArray.lastname);
-		}
+		const querySnapshot = await getDocs(usersCollection);
+		const allUsers = querySnapshot.docs.map((doc)=> doc.data());
+		const signedInUser = allUsers.find((user)=> user.id === signedInUserID);
+		renderUserName(signedInUser.firstname, signedInUser.lastname);
+
 		isLoggedIn = true;
 		changingStyleDispaly(signInForm);
 	} catch (err) {
-		console.log(err.message)
+			console.log(err.message)
 	}
 };
 
