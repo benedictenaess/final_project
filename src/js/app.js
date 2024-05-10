@@ -1,6 +1,6 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
 import {collection, getFirestore, addDoc, getDocs} from 'firebase/firestore';
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
@@ -39,8 +39,8 @@ const signUpUser = async ()=>{
 		newUser = {...newUser, id: userCredential.user.uid};
 		// users.push(newUser);
 		renderUserName(newUser.firstname, newUser.lastname);
-		isLoggedIn = true;
-		changingStyleDispaly(signUpForm);
+		// isLoggedIn = true;
+		// changeStyleDispaly(signUpForm);
 		try {
 			await addDoc(usersCollection, newUser)
 			console.log('User successfully added to users collection');
@@ -77,8 +77,8 @@ const signInUser = async ()=>{
 		const signedInUser = allUsers.find((user)=> user.id === signedInUserID);
 		renderUserName(signedInUser.firstname, signedInUser.lastname);
 
-		isLoggedIn = true;
-		changingStyleDispaly(signInForm);
+		// isLoggedIn = true;
+		// changeStyleDispaly(signInForm);
 	} catch (err) {
 			console.log(err.message)
 	}
@@ -98,8 +98,8 @@ const signOutUser = async ()=>{
 	try {
 		signOut(authService)
 		console.log('The user has succsessfully signed out');
-		isLoggedIn = false;
-		changingStyleDispaly();
+		// isLoggedIn = false;
+		// changeStyleDispaly();
 	} catch (err) {
 		console.log(err.message)
 	}
@@ -119,23 +119,42 @@ function renderUserName(firstname, lastname){
 	mainContentSection.append(userNameElement);
 }
 
-//CHANGING DISPLAY BLOCK/NONE ------------------------------------------
-function changingStyleDispaly(form) {
-	if(isLoggedIn){
-		form.reset();
-		mainContentSection.style.display = 'block';
-		formSection.style.display = 'none';
-		signOutButton.style.display = 'block';
-	} else {
-		mainContentSection.style.display = 'none';
-		formSection.style.display = 'block';
+//CHANGING DISPLAY SINGIN/OUT ------------------------------------------
+// function changeStyleDispaly(form) {
+// 	if(isLoggedIn){
+// 		form.reset();
+// 		mainContentSection.style.display = 'block';
+// 		formSection.style.display = 'none';
+// 		signOutButton.style.display = 'block';
+// 	} else {
+// 		mainContentSection.style.display = 'none';
+// 		formSection.style.display = 'block';
 
-		signInFormVisibility.style.display = 'block';
-		signUpFormVisibility.style.display = 'none';
+// 		signInFormVisibility.style.display = 'block';
+// 		signUpFormVisibility.style.display = 'none';
 
-		signOutButton.style.display = 'none';
-		userNameElement.textContent = '';
-	}
+// 		signOutButton.style.display = 'none';
+// 		userNameElement.textContent = '';
+// 	}
+// }
+
+function signInDisplay(){
+	signInForm.reset();
+	signUpForm.reset();
+	mainContentSection.style.display = 'block';
+	formSection.style.display = 'none';
+	signOutButton.style.display = 'block';
+}
+
+function signOutDisplay(){
+	mainContentSection.style.display = 'none';
+	formSection.style.display = 'block';
+
+	signInFormVisibility.style.display = 'block';
+	signUpFormVisibility.style.display = 'none';
+
+	signOutButton.style.display = 'none';
+	userNameElement.textContent = '';
 }
 
 //TOGGLE SIGN IN/SIGN UP -----------------------------------------------
@@ -158,4 +177,10 @@ signUpToggle.addEventListener('click', (e)=>{
 	toggleFormVisibility(signUpFormVisibility, signInFormVisibility);
 });
 
-
+onAuthStateChanged(authService, (user)=>{
+	if(user){
+		signInDisplay()
+	} else{
+		signOutDisplay()
+	}
+})
