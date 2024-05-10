@@ -1,46 +1,57 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'firebase/auth';
-import {collection, getFirestore} from 'firebase/firestore';
+import {collection, getFirestore, addDoc} from 'firebase/firestore';
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
 initializeApp(firebaseConfig);
 const authService = getAuth();
 const database = getFirestore();
+const usersCollection = collection(database, 'users');
 
 //SIGN UP ------------------------
 const signUpEmail = document.querySelector('.signup-email');
 const signUpPassword = document.querySelector('.signup-password');
 const signUpFirstname = document.querySelector('#firstname');
 const signUpLastname = document.querySelector('#lastname');
+const signUpGenre = document.querySelector('#genre');
 const signUpButton = document.querySelector('.sign-up-button_submit');
 const signUpForm = document.querySelector('.sign-up-form');
 
 const mainContentSection = document.querySelector('.main-content');
 const formSection = document.querySelector('.form-section');
 const signOutButton = document.querySelector('.sign-out-button');
-	
+
 const users = [];
 let isLoggedIn = false;
 
-const signUpUser =()=>{
+const signUpUser = async ()=>{
 	let newUser = {
 		firstname: signUpFirstname.value.toLowerCase().trim(),
 		lastname: signUpLastname.value.toLowerCase().trim(),
+		genre: signUpGenre.value,
 		email: signUpEmail.value.toLowerCase().trim(),
 		password: signUpPassword.value.trim()
 	}
-	createUserWithEmailAndPassword(authService, newUser.email, newUser.password)
-	.then((userCredential)=>{
+	try {
+		const userCredential = await createUserWithEmailAndPassword(authService, newUser.email, newUser.password)
 		console.log('The user has successfully signed up');
-		newUser = {...newUser, id: userCredential.user.uid}
+		newUser = {...newUser, id: userCredential.user.uid};
 		users.push(newUser);
 		console.log(users);
-
 		renderUserName(newUser.firstname, newUser.lastname);
 		isLoggedIn = true;
 		changingStyleDispaly(signUpForm);
-	}).catch(err => console.log(err.message));
+		try {
+			await addDoc(usersCollection, newUser)
+			console.log('User successfully added to users collection');
+		} catch (createUserError) {
+			console.log('Create user error:', createUserError.message);
+		}
+	} catch (authError){
+		console.log('Authentication error:', authError.message);
+		return
+	} 
 };
 
 signUpButton.addEventListener('click', (e)=>{
@@ -54,11 +65,11 @@ const signInPassword = document.querySelector('.signin-password');
 const signInButton = document.querySelector('.sign-in-button_submit');
 const signInForm = document.querySelector('.sign-in-form');
 
-const signInUser =()=>{
+const signInUser = async ()=>{
 	const userEmail = signInEmail.value.toLowerCase().trim();
 	const userPassword = signInPassword.value.trim();
-	signInWithEmailAndPassword(authService, userEmail, userPassword)
-	.then((userCredential)=>{
+	try {
+		const userCredential = signInWithEmailAndPassword(authService, userEmail, userPassword)
 		console.log('The user has successfully signed in');
 		const signedInUserID = userCredential.user.uid;
 		const userFromArray = users.find(user => user.id === signedInUserID);
@@ -67,7 +78,9 @@ const signInUser =()=>{
 		}
 		isLoggedIn = true;
 		changingStyleDispaly(signInForm);
-	}).catch(err => console.log(err.message));
+	} catch (err) {
+		console.log(err.message)
+	}
 };
 
 signInButton.addEventListener('click', (e)=>{
@@ -80,13 +93,15 @@ const signInFormVisibility = document.querySelector('.signin-form_visibility');
 const signUpFormVisibility = document.querySelector('.signup-form_visibility');
 
 
-const signOutUser =()=>{
-	signOut(authService)
-	.then(()=>{
+const signOutUser = async ()=>{
+	try {
+		signOut(authService)
 		console.log('The user has succsessfully signed out');
 		isLoggedIn = false;
 		changingStyleDispaly();
-	}).catch(err => console.log(err.message));
+	} catch (err) {
+		console.log(err.message)
+	}
 };
 
 signOutButton.addEventListener('click', (e)=>{
@@ -142,6 +157,4 @@ signUpToggle.addEventListener('click', (e)=>{
 	toggleFormVisibility(signUpFormVisibility, signInFormVisibility);
 });
 
-//ACCESS USERS IN FIRESTORE
 
-const usersCollection = collection(database, 'users');
