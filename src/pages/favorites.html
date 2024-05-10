@@ -3,13 +3,26 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="/src/css/style.css">
+	<link rel="stylesheet variables" href="/src/css/variables.css">
 	<title>Favorit Movies</title>
 </head>
 <body>
 	<header>
-		<span class="header-logo">Movie Database</span>
-		<button class="header-button sign-out-button">Sign out</button>
+		<div class="header-logo-container">
+			<span class="header-logo">The Movie Database</span>
+		</div>
+		<nav class="header-page-nav">
+			<ul>
+				<li><a href="/dist/index.html">Home</a></li>
+				<li><a href="/src/pages/movies.html">Movies</a></li>
+				<li><a href="/src/pages/favorites.html">Favorites</a></li>
+				<li><a href="/src/pages/userProfile.html">Profile</a></li>
+			</ul>
+		</nav>
+		<div class="sign-out-button-container">
+			<button class="sign-out-button">Sign out</button>
+		</div>
 	</header>
 	
 	<script src="/dist/bundle.js"></script>
