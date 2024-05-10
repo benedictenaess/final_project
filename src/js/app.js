@@ -22,13 +22,13 @@ const mainContentSection = document.querySelector('.main-content');
 const formSection = document.querySelector('.form-section');
 const signOutButton = document.querySelector('.sign-out-button');
 
-// const users = [];
-let isLoggedIn = false;
-
 const signUpUser = async ()=>{
+	const firstnameValue = signUpFirstname.value.charAt(0).toUpperCase() + signUpFirstname.value.slice(1).toLowerCase().trim();
+	const lastnameValue = signUpLastname.value.charAt(0).toUpperCase() + signUpLastname.value.slice(1).toLowerCase().trim();
+
 	let newUser = {
-		firstname: signUpFirstname.value.toLowerCase().trim(),
-		lastname: signUpLastname.value.toLowerCase().trim(),
+		firstname: firstnameValue,
+		lastname: lastnameValue,
 		genre: signUpGenre.value,
 		email: signUpEmail.value.toLowerCase().trim(),
 		password: signUpPassword.value.trim()
@@ -37,10 +37,7 @@ const signUpUser = async ()=>{
 		const userCredential = await createUserWithEmailAndPassword(authService, newUser.email, newUser.password);
 		console.log('The user has successfully signed up');
 		newUser = {...newUser, id: userCredential.user.uid};
-		// users.push(newUser);
 		renderUserName(newUser.firstname, newUser.lastname);
-		// isLoggedIn = true;
-		// changeStyleDispaly(signUpForm);
 		try {
 			await addDoc(usersCollection, newUser)
 			console.log('User successfully added to users collection');
@@ -76,9 +73,6 @@ const signInUser = async ()=>{
 		const allUsers = querySnapshot.docs.map((doc)=> doc.data());
 		const signedInUser = allUsers.find((user)=> user.id === signedInUserID);
 		renderUserName(signedInUser.firstname, signedInUser.lastname);
-
-		// isLoggedIn = true;
-		// changeStyleDispaly(signInForm);
 	} catch (err) {
 			console.log(err.message)
 	}
@@ -98,8 +92,6 @@ const signOutUser = async ()=>{
 	try {
 		signOut(authService)
 		console.log('The user has succsessfully signed out');
-		// isLoggedIn = false;
-		// changeStyleDispaly();
 	} catch (err) {
 		console.log(err.message)
 	}
@@ -120,24 +112,6 @@ function renderUserName(firstname, lastname){
 }
 
 //CHANGING DISPLAY SINGIN/OUT ------------------------------------------
-// function changeStyleDispaly(form) {
-// 	if(isLoggedIn){
-// 		form.reset();
-// 		mainContentSection.style.display = 'block';
-// 		formSection.style.display = 'none';
-// 		signOutButton.style.display = 'block';
-// 	} else {
-// 		mainContentSection.style.display = 'none';
-// 		formSection.style.display = 'block';
-
-// 		signInFormVisibility.style.display = 'block';
-// 		signUpFormVisibility.style.display = 'none';
-
-// 		signOutButton.style.display = 'none';
-// 		userNameElement.textContent = '';
-// 	}
-// }
-
 function signInDisplay(){
 	signInForm.reset();
 	signUpForm.reset();
@@ -149,10 +123,8 @@ function signInDisplay(){
 function signOutDisplay(){
 	mainContentSection.style.display = 'none';
 	formSection.style.display = 'block';
-
 	signInFormVisibility.style.display = 'block';
 	signUpFormVisibility.style.display = 'none';
-
 	signOutButton.style.display = 'none';
 	userNameElement.textContent = '';
 }
