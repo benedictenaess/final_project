@@ -104,11 +104,11 @@ signOutButton.addEventListener('click', (e)=>{
 
 //RENDER USER NAME ON FRONTPAGE ----------------------------------
 const userNameElement = document.createElement('h1');
+const usernameContainer = document.querySelector('.render-username');
 
 function renderUserName(firstname, lastname){
-	userNameElement.classList.add('render-username');
 	userNameElement.textContent = `Welcome ${firstname} ${lastname}`;
-	mainContentSection.append(userNameElement);
+	usernameContainer.append(userNameElement);
 }
 
 //CHANGING DISPLAY SINGIN/OUT ------------------------------------------
@@ -160,3 +160,6 @@ onAuthStateChanged(authService, (user)=>{
 		signOutDisplay()
 	}
 })
+
+//PAGE REDIRECTION ------------------------------------------------
+
