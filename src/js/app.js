@@ -160,6 +160,3 @@ onAuthStateChanged(authService, (user)=>{
 		signOutDisplay()
 	}
 })
-
-//PAGE REDIRECTION ------------------------------------------------
-
