@@ -186,6 +186,11 @@ a:hover {
 	font-size: var(--font-size-small);
 }
 
+.sign-in-button_submit:hover,
+.sign-up-button_submit:hover {
+	background-color: var(--color-accent-2);
+}
+
 label {
 	color: var(--color-secondary);
 }
