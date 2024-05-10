@@ -89,22 +89,24 @@ header {
 	background-color: var(--color-accent-1);
 	color: var(--color-secondary);
 	border-radius: var(--border-radius) 0 0 0;
+	font-size: var(--font-size-medium);
 }
 
 .signup-form_button {
 	background-color: var(--color-accent-2);
 	color: var(--color-primary);
 	border-radius: 0 var(--border-radius) 0 0;
+	font-size: var(--font-size-medium);
 }
 
 .signin-form_visibility {
 	display: block;
-	height: 300px;
+	height: 400px;
 }
 
 .signup-form_visibility {
 	display: none;
-	height: 300px;
+	height: 400px;
 }
 
 .sign-in-form,
@@ -122,32 +124,51 @@ header {
 
 .sign-in-form div {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.sign-in-form div div {
+	flex-direction: row;
 	justify-content: space-between;
 }
 
 .sign-up-form div,
 .sign-up-form select {
 	display: flex;
-
 	align-items: center;
 	justify-content: space-between;
 }
 
-.sign-in-button_container,
+.sign-in-button_container {
+	display: flex;
+	align-items: center;
+}
+
 .sign-up-button_container {
 	margin: 0 auto;
 }
 
 .sign-in-button_submit,
 .sign-up-button_submit {
-	background-color: transparent;
+	background-color: var(--color-secondary);
+	border-radius: var(--border-radius);
 	border: none;
-	color: var(--color-accent-3);
+	color: var(--color-primary);
+	padding: 0.5rem 1rem;
+	font-size: var(--font-size-small);
 }
 
 label {
 	color: var(--color-secondary);
+}
+
+input,
+select {
+	width: 60%;
+	height: 1.5rem;
+	border-radius: var(--border-radius);
+	border: none;
 }
 
 /* MAIN CONTENT HOMEPAGE --------------------------------- */
