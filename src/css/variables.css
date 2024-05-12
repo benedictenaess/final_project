@@ -3,16 +3,21 @@
 	--font-size-small: 1.125em;
 	--font-size-medium: 1.25em;
 	--font-size-medium-large: 1.5em;
-	--font-size-large: 1.75;
+	--font-size-large: 1.75em;
 	--font-size-extra-large: 2em;
 
-	--color-primary: #4B2E2B;
-	--color-secondary: #F6FBF5;
+	--color-primary: #FCEACB;
+	--color-secondary: #001233;
+	
+	--color-accent-1: #FF595A;
+	--color-accent-2: #ff8686;
 
-	--color-accent-1: #AE5227;
-	--color-accent-2: #F1E5DA;
-	--color-accent-3: #F6FBF5;
-	--color-accent-4: #8f421f;
+	/* --color-primary: #4B2E2B; */
+	/* --color-secondary: #F6FBF5; */
+
+	/* --color-accent-1: #AE5227; */
+	/* --color-accent-3: #F6FBF5;
+	--color-accent-4: #8f421f; */
 
 	--border-radius: 0.6rem;
 
