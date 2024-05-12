@@ -138,9 +138,9 @@ function toggleFormVisibility(formVisible, formHidden, buttonActive, buttonInact
 	formVisible.style.display = 'block';
 	formHidden.style.display = 'none';
 	buttonActive.style.backgroundColor = 'var(--color-accent-1)';
-	buttonActive.style.color = 'var(--color-secondary)';
+	// buttonActive.style.color = 'var(--color-secondary)';
 	buttonInactive.style.backgroundColor = 'var(--color-accent-2)';
-	buttonInactive.style.color = 'var(--color-primary)';
+	// buttonInactive.style.color = 'var(--color-primary)';
 };
 
 signInToggle.addEventListener('click', (e)=>{
