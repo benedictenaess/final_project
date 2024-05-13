@@ -9,6 +9,19 @@ const authService = getAuth();
 const database = getFirestore();
 const usersCollection = collection(database, 'users');
 
+//ACTIVE NAV
+const navButtons = document.querySelectorAll('a');
+
+const activeNavButton =()=>{
+	navButtons.forEach(button =>{
+		if(button.href.includes(window.location.pathname)){
+			button.style.color = 'var(--color-accent-1)';
+		}
+	})
+}
+
+activeNavButton();
+
 //SIGN UP ------------------------
 const signUpEmail = document.querySelector('.signup-email');
 const signUpPassword = document.querySelector('.signup-password');
