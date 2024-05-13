@@ -37,7 +37,7 @@ function renderFrontpageApi(movies) {
 			movieInfoContainer.append(movieTitle, movieOverview, movieRelease);
 
 			movieTitle.textContent = movie.title;
-			movieOverview.textContent = `${movie.overview.slice(0, 220)} ...`;
+			movieOverview.textContent = `${movie.overview.slice(0, 210)} ...`;
 			movieRelease.textContent = `Release date: ${movie.release_date}`;
 			if (!movie.overview){
 				movieOverview.textContent = 'We dont know what happens in this movie...'
@@ -51,7 +51,6 @@ function renderFrontpageApi(movies) {
 	})
 }
 
-
 function scrollMoviesEffect (){
 	window.addEventListener('scroll', ()=>{
 		if(window.scrollY + window.innerHeight >= document.body.scrollHeight) {
@@ -61,4 +60,5 @@ function scrollMoviesEffect (){
 	})
 }
 
+console.log(window.location.pathname)
 export {scrollMoviesEffect, fetchFrontpageApi};
