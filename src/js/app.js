@@ -160,3 +160,7 @@ onAuthStateChanged(authService, (user)=>{
 		signOutDisplay()
 	}
 })
+
+import {scrollMoviesEffect, fetchFrontpageApi} from './fetchMovies.js';
+fetchFrontpageApi(1);
+scrollMoviesEffect();
