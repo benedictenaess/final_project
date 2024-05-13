@@ -50,10 +50,13 @@ const signUpUser = async ()=>{
 	} 
 };
 
-signUpButton.addEventListener('click', (e)=>{
-	e.preventDefault();
-	signUpUser();
-})
+if(signUpButton){
+	signUpButton.addEventListener('click', (e)=>{
+		e.preventDefault();
+		signUpUser();
+		signInDisplay();
+	})
+}
 
 //SIGN IN ------------------------
 const signInEmail = document.querySelector('.signin-email');
@@ -78,10 +81,13 @@ const signInUser = async ()=>{
 	}
 };
 
-signInButton.addEventListener('click', (e)=>{
-	e.preventDefault();
-	signInUser();
-})
+if(signInButton){
+	signInButton.addEventListener('click', (e)=>{
+		e.preventDefault();
+		signInUser();
+		signInDisplay();
+	})
+}
 
 //SIGN OUT ------------------------
 const signInFormVisibility = document.querySelector('.signin-form_visibility');
@@ -99,6 +105,8 @@ const signOutUser = async ()=>{
 
 signOutButton.addEventListener('click', (e)=>{
 	e.preventDefault();
+	window.location.href = '/dist/index.html';
+	signOutDisplay();
 	signOutUser();
 })
 
@@ -117,6 +125,9 @@ function signInDisplay(){
 	signUpForm.reset();
 	mainContentSection.style.display = 'block';
 	formSection.style.display = 'none';
+}
+
+function signInDisplaySignOutButtonVisible(){
 	signOutButton.style.visibility = 'visible';
 }
 
@@ -138,29 +149,35 @@ function toggleFormVisibility(formVisible, formHidden, buttonActive, buttonInact
 	formVisible.style.display = 'block';
 	formHidden.style.display = 'none';
 	buttonActive.style.backgroundColor = 'var(--color-accent-1)';
-	// buttonActive.style.color = 'var(--color-secondary)';
 	buttonInactive.style.backgroundColor = 'var(--color-accent-2)';
-	// buttonInactive.style.color = 'var(--color-primary)';
 };
 
-signInToggle.addEventListener('click', (e)=>{
-	e.preventDefault();
-	toggleFormVisibility(signInFormVisibility, signUpFormVisibility, signInToggle, signUpToggle);
-});
+if(signInToggle){
+	signInToggle.addEventListener('click', (e)=>{
+		e.preventDefault();
+		toggleFormVisibility(signInFormVisibility, signUpFormVisibility, signInToggle, signUpToggle);
+	});
+}
 
-signUpToggle.addEventListener('click', (e)=>{
-	e.preventDefault();
-	toggleFormVisibility(signUpFormVisibility, signInFormVisibility, signUpToggle, signInToggle);
-});
+if(signUpToggle){
+	signUpToggle.addEventListener('click', (e)=>{
+		e.preventDefault();
+		toggleFormVisibility(signUpFormVisibility, signInFormVisibility, signUpToggle, signInToggle);
+	});
+}
 
 onAuthStateChanged(authService, (user)=>{
 	if(user){
-		signInDisplay()
+		console.log('user is logged in');
+		signInDisplaySignOutButtonVisible();
 	} else{
-		signOutDisplay()
+		console.log('user is logged out');
 	}
 })
 
 import {scrollMoviesEffect, fetchFrontpageApi} from './fetchMovies.js';
-fetchFrontpageApi(1);
-scrollMoviesEffect();
+
+if(window.location.pathname === '/dist/index.html'){
+	fetchFrontpageApi(1);
+	scrollMoviesEffect();
+}
