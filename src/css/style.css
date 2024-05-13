@@ -49,21 +49,29 @@ header {
 }
 
 .header-page-nav ul li {
+	list-style-type: none;
+}
+
+.home-nav,
+.movies-nav,
+.favorites-nav,
+.profile-nav {
 	background-color: transparent;
 	border: none;
 	color: var(--color-primary);
 	font-size: var(--font-size-medium);
 	font-weight: bold;
-	list-style-type: none;
 }
 
-a {
-	text-decoration: none;
-	color: inherit;
-}
-
-a:hover {
+.home-nav:hover,
+.movies-nav:hover,
+.favorites-nav:hover,
+.profile-nav:hover {
 	color: var(--color-accent-2);
+}
+
+.nav-button-active {
+	color: var(--color-accent-1);
 }
 
 .sign-out-button-container{
@@ -83,7 +91,7 @@ a:hover {
 /* SIGN-UP/IN FORM ----------------------------------*/
 
 .form-section {
-	display: block;
+	display: none;
 }
 
 .form-section-container {

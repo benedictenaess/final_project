@@ -10,17 +10,33 @@ const database = getFirestore();
 const usersCollection = collection(database, 'users');
 
 //ACTIVE NAV
-const navButtons = document.querySelectorAll('a');
+const homeNavButton = document.querySelector('.home-nav');
+const moviesNavButton = document.querySelector('.movies-nav');
+const favoritesNavButton = document.querySelector('.favorites-nav');
+const profileNavButton = document.querySelector('.profile-nav');
 
-const activeNavButton =()=>{
-	navButtons.forEach(button =>{
-		if(button.href.includes(window.location.pathname)){
-			button.style.color = 'var(--color-accent-1)';
-		}
+function pageNavigation(){
+	homeNavButton.addEventListener('click',(e)=>{
+		e.preventDefault();
+		window.location.pathname = '/dist/index.html';
+		activeButton(homeNavButton);
+	})
+	
+	moviesNavButton.addEventListener('click',(e)=>{
+		e.preventDefault();
+		window.location.pathname = '/src/pages/movies.html';
+	})
+	
+	favoritesNavButton.addEventListener('click',(e)=>{
+		e.preventDefault();
+		window.location.pathname = '/src/pages/favorites.html';
+	})
+	
+	profileNavButton.addEventListener('click',(e)=>{
+		e.preventDefault();
+		window.location.pathname = '/src/pages/userProfile.html';
 	})
 }
-
-activeNavButton();
 
 //SIGN UP ------------------------
 const signUpEmail = document.querySelector('.signup-email');
@@ -67,7 +83,6 @@ if(signUpButton){
 	signUpButton.addEventListener('click', (e)=>{
 		e.preventDefault();
 		signUpUser();
-		signInDisplay();
 	})
 }
 
@@ -98,7 +113,6 @@ if(signInButton){
 	signInButton.addEventListener('click', (e)=>{
 		e.preventDefault();
 		signInUser();
-		signInDisplay();
 	})
 }
 
@@ -119,7 +133,6 @@ const signOutUser = async ()=>{
 signOutButton.addEventListener('click', (e)=>{
 	e.preventDefault();
 	window.location.href = '/dist/index.html';
-	signOutDisplay();
 	signOutUser();
 })
 
@@ -134,23 +147,30 @@ function renderUserName(firstname, lastname){
 
 //CHANGING DISPLAY SINGIN/OUT ------------------------------------------
 function signInDisplay(){
-	signInForm.reset();
-	signUpForm.reset();
-	mainContentSection.style.display = 'block';
-	formSection.style.display = 'none';
+	if(window.location.pathname === '/dist/index.html'){
+		signInForm.reset();
+		signUpForm.reset();
+		mainContentSection.style.display = 'block';
+		formSection.style.display = 'none';
+	}
+}
+
+function signOutDisplay(){
+	if(window.location.pathname === '/dist/index.html'){
+		mainContentSection.style.display = 'none';
+		formSection.style.display = 'block';
+		signInFormVisibility.style.display = 'block';
+		signUpFormVisibility.style.display = 'none';
+		userNameElement.textContent = '';
+	}
+}
+
+function signOutDisplaySignOutButtonHidden(){
+	signOutButton.style.visibility = 'hidden';
 }
 
 function signInDisplaySignOutButtonVisible(){
 	signOutButton.style.visibility = 'visible';
-}
-
-function signOutDisplay(){
-	mainContentSection.style.display = 'none';
-	formSection.style.display = 'block';
-	signInFormVisibility.style.display = 'block';
-	signUpFormVisibility.style.display = 'none';
-	signOutButton.style.visibility = 'hidden';
-	userNameElement.textContent = '';
 }
 
 //TOGGLE SIGN IN/SIGN UP -----------------------------------------------
@@ -183,8 +203,12 @@ onAuthStateChanged(authService, (user)=>{
 	if(user){
 		console.log('user is logged in');
 		signInDisplaySignOutButtonVisible();
+		signInDisplay();
+		pageNavigation();
 	} else{
 		console.log('user is logged out');
+		signOutDisplaySignOutButtonHidden();
+		signOutDisplay();
 	}
 })
 
