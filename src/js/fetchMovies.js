@@ -51,13 +51,17 @@ function renderFrontpageApi(movies) {
 	})
 }
 
-function scrollMoviesEffect (){
-	window.addEventListener('scroll', ()=>{
-		if(window.scrollY + window.innerHeight >= document.body.scrollHeight) {
-			page ++ ; 
-			fetchFrontpageApi(page)
-		}
-	})
+async function scrollMoviesEffect (){
+	try {
+		window.addEventListener('scroll', ()=>{
+			if(window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+				page ++ ; 
+				fetchFrontpageApi(page)
+			}
+		})
+	} catch(err){
+		console.log(err.message);
+	}
 }
 
 console.log(window.location.pathname)
