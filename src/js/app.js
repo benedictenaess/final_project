@@ -227,6 +227,8 @@ if(window.location.pathname === '/src/pages/movies.html'){
 
 
 //FILTER --------------------------------
-import {fetchGenreId} from './filterMovies';
+import {fetchGenreId, sortMovies} from './filterMovies';
 
 fetchGenreId();
+
+// sortMovies();
