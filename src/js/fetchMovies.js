@@ -98,15 +98,39 @@ function renderMoviepageApi(moviesWidthID){
 	moviesWidthID.forEach(movie =>{
 		const movieContainer = document.createElement('div');
 		const movieImg = document.createElement('img');
-		const movieTitle = document.createElement('p');
 	
 		moviespageContainer.append(movieContainer);
-		movieContainer.append(movieImg, movieTitle);
+		movieContainer.append(movieImg);
 	
 		movieContainer.classList.add('moviespage-movies-container');
 	
-		movieTitle.textContent = movie.title;
 		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+		
+		const toggleContainer =()=>{
+			let infoContainer = document.querySelector('.moviepage-info-container');
+			if(!infoContainer){
+				const infoContainer = document.createElement('div');
+				const movieTitle = document.createElement('h4');
+				const movieOverview = document.createElement('p');
+				const addToFavorites = document.createElement('button');
+				
+				movieTitle.textContent = movie.title;
+				movieOverview.textContent = movie.overview;
+				addToFavorites.textContent = 'Add to Favorites';
+				
+				movieContainer.classList.add('large-movie-container');
+				infoContainer.classList.add('moviepage-info-container');
+				
+				movieContainer.append(infoContainer);
+				infoContainer.append(movieTitle, movieOverview, addToFavorites);
+			}else{
+				infoContainer.remove();
+				document.querySelectorAll('.moviespage-movies-container').forEach(container => {
+					container.classList.remove('large-movie-container');
+				});
+			}
+		}	
+		movieContainer.addEventListener('click', toggleContainer);
 	})
 }
 
