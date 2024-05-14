@@ -359,9 +359,23 @@ input,
 
 .moviespage-movies-section {
 	display: flex;
+	flex-flow: row wrap;
+	gap: 1rem;
 	width: 100%;
+	margin-top: 2rem;
 }
 
 .moviespage-movies-container {
+	display: flex;
+	flex-direction: column;
+}
 
+.moviespage-movies-container img{
+	width: 200px;
+}
+
+.moviespage-movies-container p {
+	display: flex;
+	flex-wrap: wrap;
+	width: 200px;
 }

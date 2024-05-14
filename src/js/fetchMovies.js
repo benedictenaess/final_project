@@ -6,9 +6,12 @@ const fetchMovieApi = async (pageNum)=>{
 	try {
 		const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${page}`);
 		const data = await response.json();
-		const movieData = data.results
-		renderFrontpageApi(movieData);
-		renderMoviepageApi(movieData);
+		const movieData = data.results;
+		if(window.location.pathname === '/dist/index.html'){
+			renderFrontpageApi(movieData);
+		} else if(window.location.pathname === '/src/pages/movies.html'){
+			renderMoviepageApi(movieData);
+		}
 	} catch (err){
 		console.log(err.message);
 	}
@@ -85,20 +88,25 @@ const fetchGenreId = async ()=>{
 	}
 }
 
-function renderMoviepageApi(movie){
-	const moviespageContainer = document.querySelector('.moviespage-movies-container');
-	const movieContainer = document.createElement('div');
-	const movieImg = document.createElement('img');
-	const movieTitle = document.createElement('h3');
-	// const movieRelease = document.createElement('span');
-		
-	moviespageContainer.append(movieContainer);
-	movieContainer.append(movieImg);
-
-	movieContainer.classList.add('each-movie-container');
-	movieTitle.classList.add('frontpage-movie-title');
-
-	movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+function renderMoviepageApi(movies){
+	movies.forEach(movie =>{
+		const moviespageContainer = document.querySelector('.moviespage-movies-section');
+		const movieContainer = document.createElement('div');
+		const movieImg = document.createElement('img');
+		const movieTitle = document.createElement('p');
+		// const movieRelease = document.createElement('span');
+			
+		console.log(movie.title);
+	
+		moviespageContainer.append(movieContainer);
+		movieContainer.append(movieImg, movieTitle);
+	
+		movieContainer.classList.add('moviespage-movies-container');
+		// movieTitle.classList.add('frontpage-movie-title');
+	
+		movieTitle.textContent = movie.title;
+		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+	})
 }
 
 export {scrollMoviesEffect, fetchMovieApi, fetchGenreId};
