@@ -12,6 +12,9 @@ body {
 
 button {
 	cursor: pointer;
+	background: transparent;
+	border: none;
+	color: var(--color-primary);
 }
 
 header {
@@ -20,7 +23,7 @@ header {
 	justify-content: space-between;
 	width: 100%;
 	height: 5rem;
-	padding: 0rem 2rem;
+	padding: 0rem 5rem;
 	/* background-color: var(--color-accent-1); */
 }
 
@@ -28,11 +31,13 @@ header {
 	display: flex;
 	justify-content: flex-start;
 	flex-basis: 25%;
+	/* visibility: hidden; */
 }
 
 .header-logo {
 	color: var(--color-accent-1);
-	font-size: var(--font-size-base);
+	font-size: var(--font-size-extra-large);
+	text-shadow: 1px 1px 2px rgb(255, 0, 0);
 }
 
 .header-page-nav {
@@ -56,11 +61,10 @@ header {
 .movies-nav,
 .favorites-nav,
 .profile-nav {
-	background-color: transparent;
-	border: none;
 	color: var(--color-primary);
 	font-size: var(--font-size-medium);
 	font-weight: bold;
+	text-shadow: 1px 1px 1px black;
 }
 
 .home-nav:hover,
@@ -82,10 +86,11 @@ header {
 
 .sign-out-button {
 	visibility: hidden;
-	background-color: transparent;
-	border: none;
 	color: var(--color-accent-1);
 	font-size: var(--font-size-base);
+	border: 1px solid var(--color-accent-1);
+	border-radius: var(--border-radius);
+	padding: 0.3rem;
 }
 
 /* SIGN-UP/IN FORM ----------------------------------*/
@@ -209,11 +214,11 @@ label {
 }
 
 input,
-select {
+#genre {
 	width: 60%;
 	height: 1.5rem;
 	border-radius: var(--border-radius);
-	border: none;
+	border: 1px solid var(--color-secondary);
 	padding: 0 0.5rem;
 	color: var(--color-secondary);
 }
@@ -284,7 +289,7 @@ select {
 	height: 100%;
 	margin-left: 1rem;
 	padding: 1rem;
-	line-height: 1.5rem;
+	line-height: var(--line-height);
 	font-size: var(--font-size-base);
 	background: var(--color-accent-2);
 	border-radius: var(--border-radius);
@@ -295,4 +300,68 @@ select {
 	width: 200px;
 	border-radius: var(--border-radius);
 	box-shadow: 3px 3px 5px var(--color-accent-3);
+}
+/* MOVIESPAGE ----------------------------------------------------------- */
+
+.find-movie-section {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-top: 2rem;
+	padding: 0rem 5rem;
+}
+
+.find-movie-info-container {
+	display: flex;
+	flex-direction: column;
+	width: 50%;
+	gap: var(--line-height);
+}
+
+.filters-container {
+	margin-top: 2rem;
+}
+
+.all-filter-buttons {
+	display: flex;
+	justify-content: space-evenly;
+	flex-flow: row wrap;
+	width: 100%;
+	gap: 1.5rem;
+}
+
+.all-filter-buttons button {
+	color: var(--color-accent-1);
+	font-size: var(--font-size-base);
+	border: 1px solid var(--color-accent-1);
+	border-radius: var(--border-radius);
+	padding: 0.3rem;
+	width: 120px;
+}
+
+.sort-container {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+
+#categories {
+	border-radius: var(--border-radius);
+	width: 200px;
+	height: 1.5rem;
+	color: var(--color-secondary);
+	border: none;
+	padding: 0 0.5rem;
+}
+
+.moviespage-movies-section {
+	display: flex;
+	width: 100%;
+}
+
+.moviespage-movies-container {
+
 }
