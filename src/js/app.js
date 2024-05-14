@@ -1,7 +1,7 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
-import {collection, getFirestore, addDoc, getDocs} from 'firebase/firestore';
+import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
 initializeApp(firebaseConfig);
@@ -136,14 +136,77 @@ signOutButton.addEventListener('click', (e)=>{
 	signOutUser();
 })
 
-//RENDER USER NAME ON FRONTPAGE ----------------------------------
+//RENDER USERS ---------------------------------------
 const userNameElement = document.createElement('h1');
-const usernameContainer = document.querySelector('.render-username');
+const usernameContainer = document.querySelector('.render-username-container');
 
 function renderUserName(firstname, lastname){
 	userNameElement.textContent = `Welcome ${firstname} ${lastname}`;
+	usernameContainer.classList.add('render-username');
 	usernameContainer.append(userNameElement);
+	setTimeout(() => {
+		usernameContainer.removeChild(userNameElement);
+		usernameContainer.classList.remove('render-username');
+	}, 3000);
 }
+
+const renderUsersOnUserProfile = async()=>{
+	try {
+		const currentUser = authService.currentUser;
+		if(currentUser){
+			const querySnapshot = await getDocs(usersCollection);
+			const allUsers = querySnapshot.docs.map((doc)=> doc.data());
+			const signedInUser = allUsers.find((user)=> user.id === currentUser.uid);
+			
+			const userContainer = document.querySelector('.user-container');
+
+			const userName = document.createElement('span');
+			const userEmail = document.createElement('span');
+			const userGenre = document.createElement('span');
+
+			userContainer.append(userName, userEmail, userGenre);
+			userName.textContent = `User: ${signedInUser.firstname} ${signedInUser.lastname}`;
+			userEmail.textContent = `Email: ${signedInUser.email}`
+			userGenre.textContent = `Your favorite category is: ${signedInUser.genre}`;
+		}
+	} catch(err){
+		console.log(err.message);
+	}
+}
+
+
+
+
+
+const deleteAccountButton = document.querySelector('.delete-account-button');
+
+if(window.location.pathname === '/src/pages/userProfile.html'){
+	deleteAccountButton.addEventListener('click', async()=>{
+		await deleteAccount();
+		window.location.pathname = '/dist/index.html';
+	})
+}
+
+
+const deleteAccount = async ()=>{
+	try {
+		const currentSignedinUser = authService.currentUser;
+		
+		if(currentSignedinUser){
+			// const currentUserID = currentSignedinUser.uid;
+
+			// await deleteDoc(doc(database, 'users', currentUserID));
+			await currentSignedinUser.delete();
+
+			console.log('User account was successfully deleted');
+		}
+	} catch(err){
+		console.log(err.message);
+	}
+}
+
+
+
 
 //CHANGING DISPLAY SINGIN/OUT ------------------------------------------
 function signInDisplay(){
@@ -205,13 +268,13 @@ onAuthStateChanged(authService, (user)=>{
 		signInDisplaySignOutButtonVisible();
 		signInDisplay();
 		pageNavigation();
+		renderUsersOnUserProfile();
 	} else{
 		console.log('user is logged out');
 		signOutDisplaySignOutButtonHidden();
 		signOutDisplay();
 	}
 })
-
 
 //FETCH MOVIES JS --------------------------------------------------------
 import {scrollMoviesEffect, fetchMovieApiForMoviepage, fetchMovieApiForFrontpage} from './fetchMovies';
@@ -226,7 +289,7 @@ if(window.location.pathname === '/src/pages/movies.html'){
 }
 
 
-//FILTER --------------------------------
+//FILTER ----------------------------------------------------------------
 import {fetchGenreId, sortMovies} from './filterMovies';
 
 fetchGenreId();
