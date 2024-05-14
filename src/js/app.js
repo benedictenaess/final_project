@@ -214,17 +214,19 @@ onAuthStateChanged(authService, (user)=>{
 
 
 //FETCH MOVIES JS --------------------------------------------------------
-import {scrollMoviesEffect, fetchMovieApi} from './fetchMovies';
+import {scrollMoviesEffect, fetchMovieApiForMoviepage, fetchMovieApiForFrontpage} from './fetchMovies';
 
-if(window.location.pathname === '/dist/index.html' || window.location.pathname === '/src/pages/movies.html'){
-	fetchMovieApi(1);
+if(window.location.pathname === '/dist/index.html'){
+	fetchMovieApiForFrontpage(1);
 	scrollMoviesEffect();
+}
+
+if(window.location.pathname === '/src/pages/movies.html'){
+	fetchMovieApiForMoviepage(1);
 }
 
 
 //FILTER --------------------------------
-import {fetchGenreId, filterMovies} from './filterMovies';
+import {fetchGenreId} from './filterMovies';
 
 fetchGenreId();
-
-// filterMovies();

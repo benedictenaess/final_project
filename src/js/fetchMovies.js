@@ -2,21 +2,39 @@ import apiKey from "./apiKey";
 import {filterMovies} from './filterMovies';
 
 let page = 1;
+let totalPages = 6;
+let allPages = [];
 
-const fetchMovieApi = async (pageNum)=>{
+const fetchMovieApiForMoviepage = async (pageNum)=>{
 	try {
-		const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${page}`);
-		const data = await response.json();
-		const movieData = data.results;
-		if(window.location.pathname === '/dist/index.html'){
-			renderFrontpageApi(movieData);
-		} else if(window.location.pathname === '/src/pages/movies.html'){
-			filterMovies(movieData);
+		while (page <= totalPages){
+			const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${page}`);
+			const data = await response.json();
+			const movieData = data.results;
+			if(movieData.length === 0){
+				break;
+			}
+			allPages.push(...movieData);
+			page++;
+
+			filterMovies(allPages);
 		}
 	} catch (err){
 		console.log(err.message);
 	}
 }
+
+const fetchMovieApiForFrontpage = async ()=>{
+	try {
+		const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${page}`);
+			const data = await response.json();
+			const movieData = data.results;
+			renderFrontpageApi(movieData);
+	} catch (err){
+		console.log(err.message);
+	}
+}
+
 
 //REDNER FRONTPAGE API --------------------------------------
 function renderFrontpageApi(movies) {
@@ -63,7 +81,7 @@ async function scrollMoviesEffect (){
 		window.addEventListener('scroll', ()=>{
 			if(window.scrollY + window.innerHeight >= document.body.scrollHeight) {
 				page ++ ; 
-				fetchMovieApi(page)
+				fetchMovieApiForFrontpage(page)
 			}
 		})
 	} catch(err){
@@ -88,8 +106,7 @@ function renderMoviepageApi(moviesWidthID){
 	
 		movieTitle.textContent = movie.title;
 		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-		// console.log(movie.genre_ids[1]);
 	})
 }
 
-export {scrollMoviesEffect, fetchMovieApi, renderMoviepageApi};
+export {scrollMoviesEffect, fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};
