@@ -20,14 +20,21 @@ const fetchGenreId = async ()=>{
 const filterButtons = document.querySelectorAll('.filter-button');
 
 const filterMovies=(movies)=>{
+	renderMoviepageApi(movies);
 	filterButtons.forEach(button =>{
 		button.addEventListener('click', async (e)=>{
 			try {
 				e.preventDefault();
 				const buttonTargetName = button.textContent;
-				const targetID = genreID[buttonTargetName];
-				const renderMovies = movies.filter(movie => movie.genre_ids.includes(targetID));
-				renderMoviepageApi(renderMovies);
+				if(buttonTargetName){
+					if(buttonTargetName === 'All') {
+						renderMoviepageApi(movies);
+					} else {
+						const targetID = genreID[buttonTargetName];
+						const renderMovies = movies.filter(movie => movie.genre_ids.includes(targetID));
+						renderMoviepageApi(renderMovies);
+					}
+				}
 			} catch (err){
 				console.log(err.message);
 			}
