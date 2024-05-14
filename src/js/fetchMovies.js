@@ -1,4 +1,5 @@
 import apiKey from "./apiKey";
+import {filterMovies} from './filterMovies';
 
 let page = 1;
 
@@ -10,7 +11,7 @@ const fetchMovieApi = async (pageNum)=>{
 		if(window.location.pathname === '/dist/index.html'){
 			renderFrontpageApi(movieData);
 		} else if(window.location.pathname === '/src/pages/movies.html'){
-			renderMoviepageApi(movieData);
+			filterMovies(movieData);
 		}
 	} catch (err){
 		console.log(err.message);
@@ -72,41 +73,23 @@ async function scrollMoviesEffect (){
 
 //RENDER MOVIESPAGE API ------------------------------------------------
 
-const genreID = [];
-
-const fetchGenreId = async ()=>{
-	try {
-		const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`);
-		const data = await response.json();
-		const allGenres = data.genres;
-		allGenres.map(genre=>{
-			genreID.push({id: genre.id, genre: genre.name});
-		})
-		console.log(genreID);
-	} catch (err){
-		console.log(err.message);
-	}
-}
-
-function renderMoviepageApi(movies){
-	movies.forEach(movie =>{
-		const moviespageContainer = document.querySelector('.moviespage-movies-section');
+function renderMoviepageApi(moviesWidthID){
+	const moviespageContainer = document.querySelector('.moviespage-movies-section');
+	moviespageContainer.textContent = '';
+	moviesWidthID.forEach(movie =>{
 		const movieContainer = document.createElement('div');
 		const movieImg = document.createElement('img');
 		const movieTitle = document.createElement('p');
-		// const movieRelease = document.createElement('span');
-			
-		console.log(movie.title);
 	
 		moviespageContainer.append(movieContainer);
 		movieContainer.append(movieImg, movieTitle);
 	
 		movieContainer.classList.add('moviespage-movies-container');
-		// movieTitle.classList.add('frontpage-movie-title');
 	
 		movieTitle.textContent = movie.title;
 		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+		// console.log(movie.genre_ids[1]);
 	})
 }
 
-export {scrollMoviesEffect, fetchMovieApi, fetchGenreId};
+export {scrollMoviesEffect, fetchMovieApi, renderMoviepageApi};
