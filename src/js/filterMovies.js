@@ -11,13 +11,13 @@ const fetchGenreId = async ()=>{
 		allGenres.forEach(genre=>{
 			genreID[genre.name] = genre.id;
 		})
-		console.log(genreID);
 	} catch (err){
 		console.log(err.message);
 	}
 }
 
 const filterButtons = document.querySelectorAll('.filter-button');
+const selectCategory = document.querySelector('#categories');
 
 const filterMovies=(movies)=>{
 	renderMoviepageApi(movies);
@@ -29,10 +29,12 @@ const filterMovies=(movies)=>{
 				if(buttonTargetName){
 					if(buttonTargetName === 'All') {
 						renderMoviepageApi(movies);
+						// sortMovies(movies)
 					} else {
 						const targetID = genreID[buttonTargetName];
 						const renderMovies = movies.filter(movie => movie.genre_ids.includes(targetID));
 						renderMoviepageApi(renderMovies);
+						// sortMovies(renderMovies)
 					}
 				}
 			} catch (err){
@@ -42,4 +44,27 @@ const filterMovies=(movies)=>{
 	})
 }
 
-export {fetchGenreId, filterMovies};
+
+function sortMovies(movies){
+	selectCategory.addEventListener('change', ()=>{
+		const targetOption = selectCategory.value;
+		switch (targetOption) {
+			case 'highest-rating':
+				movies.sort((a, b)=> a.popularity - b.popularity);
+				break;
+			case 'lowest-rating':
+				movies.sort((a, b)=> b.popularity - a.popularity);
+				break;
+			case 'newest-release':
+				movies.sort((a, b)=> new Date(a.release_date) - new Date(b.release_date));
+				break;
+			case 'oldest-release':
+				movies.sort((a, b)=> new Date(b.release_date) - new Date(a.release_date));
+				break;
+			default:
+				break;
+		}
+	})
+}
+
+export {fetchGenreId, filterMovies, sortMovies};

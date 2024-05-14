@@ -2,7 +2,7 @@ import apiKey from "./apiKey";
 import {filterMovies} from './filterMovies';
 
 let page = 1;
-let totalPages = 6;
+let totalPages = 10;
 let allPages = [];
 
 const fetchMovieApiForMoviepage = async (pageNum)=>{
@@ -18,6 +18,7 @@ const fetchMovieApiForMoviepage = async (pageNum)=>{
 			page++;
 
 			filterMovies(allPages);
+			console.log(movieData);
 		}
 	} catch (err){
 		console.log(err.message);
