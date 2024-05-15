@@ -134,4 +134,6 @@ function renderMoviepageApi(moviesWidthID){
 	})
 }
 
+
+
 export {scrollMoviesEffect, fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};

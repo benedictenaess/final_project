@@ -16,6 +16,8 @@ const fetchGenreId = async ()=>{
 	}
 }
 
+fetchGenreId();
+
 const filterButtons = document.querySelectorAll('.filter-button');
 const selectCategory = document.querySelector('#categories');
 
