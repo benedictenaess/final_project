@@ -1,7 +1,7 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
-import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
+import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc, query} from 'firebase/firestore';
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
 initializeApp(firebaseConfig);
@@ -175,7 +175,7 @@ const renderUsersOnUserProfile = async()=>{
 }
 
 
-
+//DELETE AUTH AND FIRESTORE ---------------------------------------------------
 
 
 const deleteAccountButton = document.querySelector('.delete-account-button');
@@ -191,15 +191,28 @@ if(window.location.pathname === '/src/pages/userProfile.html'){
 const deleteAccount = async ()=>{
 	try {
 		const currentSignedinUser = authService.currentUser;
+		const signedInUserUid = currentSignedinUser.uid;
 		
-		if(currentSignedinUser){
-			// const currentUserID = currentSignedinUser.uid;
+		const querySnapshot = await getDocs(usersCollection);
+		const usersWithUserIdAndUid = [];
+		querySnapshot.forEach(doc =>{
+			const userData = doc.data()
+			const user = {
+				uniqueId: doc.id,
+				userId: userData.id
+			};
+			usersWithUserIdAndUid.push(user);
+		})
 
-			// await deleteDoc(doc(database, 'users', currentUserID));
+		const userInfoFromDatabase = usersWithUserIdAndUid.find(user => user.userId === signedInUserUid);
+		const userInfoToBeDeleted = userInfoFromDatabase.uniqueId;
+
+		if(userInfoFromDatabase.userId === signedInUserUid){
+			await deleteDoc(doc(database, 'users', userInfoToBeDeleted));
 			await currentSignedinUser.delete();
-
-			console.log('User account was successfully deleted');
 		}
+		console.log('User account was successfully deleted');
+
 	} catch(err){
 		console.log(err.message);
 	}
@@ -276,8 +289,7 @@ onAuthStateChanged(authService, (user)=>{
 	}
 })
 
-//FETCH MOVIES JS --------------------------------------------------------
-import {scrollMoviesEffect, fetchMovieApiForMoviepage, fetchMovieApiForFrontpage} from './fetchMovies';
+import { fetchMovieApiForFrontpage, scrollMoviesEffect, fetchMovieApiForMoviepage } from "./fetchMovies";
 
 if(window.location.pathname === '/dist/index.html'){
 	fetchMovieApiForFrontpage(1);
@@ -287,11 +299,3 @@ if(window.location.pathname === '/dist/index.html'){
 if(window.location.pathname === '/src/pages/movies.html'){
 	fetchMovieApiForMoviepage(1);
 }
-
-
-//FILTER ----------------------------------------------------------------
-import {fetchGenreId, sortMovies} from './filterMovies';
-
-fetchGenreId();
-
-// sortMovies();
