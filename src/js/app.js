@@ -1,7 +1,9 @@
-import firebaseConfig from "./firebaseConfig";
+import firebaseConfig from "./firebaseConfig.js";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
 import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc, query} from 'firebase/firestore';
+
+const pathName = window.location.pathname
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
 initializeApp(firebaseConfig);
@@ -153,7 +155,7 @@ function renderUserName(firstname, lastname){
 const renderUsersOnUserProfile = async()=>{
 	try {
 		const currentUser = authService.currentUser;
-		if(currentUser){
+		if(currentUser && window.location.pathname === '/src/pages/userProfile.html'){
 			const querySnapshot = await getDocs(usersCollection);
 			const allUsers = querySnapshot.docs.map((doc)=> doc.data());
 			const signedInUser = allUsers.find((user)=> user.id === currentUser.uid);
@@ -167,16 +169,14 @@ const renderUsersOnUserProfile = async()=>{
 			userContainer.append(userName, userEmail, userGenre);
 			userName.textContent = `User: ${signedInUser.firstname} ${signedInUser.lastname}`;
 			userEmail.textContent = `Email: ${signedInUser.email}`
-			userGenre.textContent = `Your favorite category is: ${signedInUser.genre}`;
+			userGenre.textContent = `Your Favorite Genre is: ${signedInUser.genre}`;
 		}
 	} catch(err){
 		console.log(err.message);
 	}
 }
 
-
 //DELETE AUTH AND FIRESTORE ---------------------------------------------------
-
 
 const deleteAccountButton = document.querySelector('.delete-account-button');
 
@@ -186,7 +186,6 @@ if(window.location.pathname === '/src/pages/userProfile.html'){
 		window.location.pathname = '/dist/index.html';
 	})
 }
-
 
 const deleteAccount = async ()=>{
 	try {
@@ -217,9 +216,6 @@ const deleteAccount = async ()=>{
 		console.log(err.message);
 	}
 }
-
-
-
 
 //CHANGING DISPLAY SINGIN/OUT ------------------------------------------
 function signInDisplay(){
@@ -289,9 +285,11 @@ onAuthStateChanged(authService, (user)=>{
 	}
 })
 
-import { fetchMovieApiForFrontpage, scrollMoviesEffect, fetchMovieApiForMoviepage } from "./fetchMovies";
+import { fetchMovieApiForFrontpage, scrollMoviesEffect, fetchMovieApiForMoviepage } from "./fetchMovies.js";
 
-if(window.location.pathname === '/dist/index.html'){
+
+
+if(pathName.includes('/dist/index.html')){
 	fetchMovieApiForFrontpage(1);
 	scrollMoviesEffect();
 }
