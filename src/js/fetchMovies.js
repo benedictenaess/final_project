@@ -5,21 +5,11 @@ let page = 1;
 let totalPages = 10;
 let allPages = [];
 
-const fetchMovieApiForMoviepage = async (pageNum)=>{
+const fetchMovieApiForMoviepage = async ()=>{
 	try {
-		while (page <= totalPages){
-			const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${page}`);
-			const data = await response.json();
-			const movieData = data.results;
-			if(movieData.length === 0){
-				break;
-			}
-			allPages.push(...movieData);
-			page++;
-
-			filterMovies(allPages);
-			console.log(movieData);
-		}
+		const response = await fetch('http://localhost:2000/');
+		const data = await response.json();
+		filterMovies(data);
 	} catch (err){
 		console.log(err.message);
 	}
@@ -133,14 +123,5 @@ function renderMoviepageApi(moviesWidthID){
 		movieContainer.addEventListener('click', toggleContainer);
 	})
 }
-
-// if(window.location.pathname === '/dist/index.html'){
-// 	fetchMovieApiForFrontpage(1);
-// 	scrollMoviesEffect();
-// }
-
-// if(window.location.pathname === '/src/pages/movies.html'){
-// 	fetchMovieApiForMoviepage(1);
-// }
 
 export {scrollMoviesEffect, fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};
