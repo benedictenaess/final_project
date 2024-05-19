@@ -1,5 +1,5 @@
-import apiKey from "./apiKey";
-import {renderMoviepageApi} from './fetchMovies';
+import apiKey from "./apiKey.js";
+import {renderMoviepageApi} from './fetchMovies.js';
 
 const genreID = {};
 

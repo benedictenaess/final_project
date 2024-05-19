@@ -1,5 +1,5 @@
-import apiKey from "./apiKey";
-import {filterMovies} from './filterMovies';
+import apiKey from "./apiKey.js";
+import {filterMovies} from './filterMovies.js';
 
 let page = 1;
 let totalPages = 10;
@@ -134,6 +134,13 @@ function renderMoviepageApi(moviesWidthID){
 	})
 }
 
+// if(window.location.pathname === '/dist/index.html'){
+// 	fetchMovieApiForFrontpage(1);
+// 	scrollMoviesEffect();
+// }
 
+// if(window.location.pathname === '/src/pages/movies.html'){
+// 	fetchMovieApiForMoviepage(1);
+// }
 
 export {scrollMoviesEffect, fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};
