@@ -398,23 +398,28 @@ input,
 }
 
 .moviespage-movies-container img{
-	height: 400px;
-	padding: 1rem;
+	height: 350px;
+	margin: 1rem;
+	border-radius: var(--border-radius);
+	box-shadow: 3px 3px 5px var(--color-accent-3);
 }
 
 .large-movie-container {
 	display: flex;
     flex-direction: row;
-    width: 80%;
-    height: 52%;
+    width: 70%;
+    height: 50%;
+	min-height: 350px;
     background-color: var(--color-accent-1);
     border-radius: var(--border-radius);
     position: fixed;
     top: 50%;
     left: 50%;
 	transform: translate(-50%, -50%);
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+	border-radius: var(--border-radius);
+	box-shadow: 3px 3px 5px var(--color-accent-3);
 }
 
 .moviepage-info-container {

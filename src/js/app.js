@@ -314,37 +314,75 @@ const favoriteMoviesContainer = document.querySelector('.favorite-movies-contain
 
 async function displayFavorites(){
 	try {
+		favoriteMoviesContainer.textContent = '';
 		const querySnapshot = await getDocs(favoritesCollection);
 		const allFavoritMovies = querySnapshot.docs.map(doc => doc.data());
 		allFavoritMovies.forEach((movie) =>{
-			if(pathName.includes('favorites')){
-				const movieContainer = document.createElement('div');
-				const movieImg = document.createElement('img');
-				const infoContainer = document.createElement('div');
-				const movieTitle = document.createElement('h2');
-				const movieReleaseDate = document.createElement('p');
-				const movieOverview = document.createElement('p');
-				const deleteFavoriteMovie = document.createElement('button');
-
-				movieTitle.textContent = movie.title;
-				movieReleaseDate.textContent = `Release date: ${movie.releaseDate}`;
-				movieOverview.textContent = movie.overview;
-				movieImg.src =  `https://image.tmdb.org/t/p/w500${movie.img}`;
-				deleteFavoriteMovie.textContent = 'Remove from Favorites'
-
-				movieContainer.classList.add('each-favorite-movie-container');
-				infoContainer.classList.add('favorite-movie-info');
-				
-				favoriteMoviesContainer.append(movieContainer);
-				movieContainer.append(movieImg, infoContainer);
-				infoContainer.append(movieTitle, movieReleaseDate, movieOverview, deleteFavoriteMovie);
-			}
+			rednerFavoriteMovies(movie);
 		})
 	} catch (err){
 		console.log(err.message);
 	}
 }
-displayFavorites()
+
+//RENDER FAVORITE MOVIES ----------------------------------------------------
+
+function rednerFavoriteMovies(movie){
+	if(pathName.includes('favorites')){
+		const movieContainer = document.createElement('div');
+		const movieImg = document.createElement('img');
+		const infoContainer = document.createElement('div');
+		const movieTitle = document.createElement('h2');
+		const movieReleaseDate = document.createElement('p');
+		const movieOverview = document.createElement('p');
+		const deleteFavoriteMovie = document.createElement('button');
+
+		movieTitle.textContent = movie.title;
+		movieReleaseDate.textContent = `Release date: ${movie.releaseDate}`;
+		movieOverview.textContent = movie.overview;
+		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.img}`;
+		deleteFavoriteMovie.textContent = 'Remove from Favorites'
+
+		movieContainer.classList.add('each-favorite-movie-container');
+		infoContainer.classList.add('favorite-movie-info');
+		
+		favoriteMoviesContainer.append(movieContainer);
+		movieContainer.append(movieImg, infoContainer);
+		infoContainer.append(movieTitle, movieReleaseDate, movieOverview, deleteFavoriteMovie);
+
+		deleteFavoriteMovie.addEventListener('click', (e)=>{
+			const removeContainer = e.target.parentElement.parentElement;
+			deleteFavoriteMovieFromDatabase(movie);
+			favoriteMoviesContainer.removeChild(removeContainer);
+			document.addEventListener('DOMContentLoaded', ()=>{
+				displayFavorites();
+			})
+		})
+	}
+}
+
+//DELETE FAVORITE MOVIE -------------------------------------------------------------------
+
+async function deleteFavoriteMovieFromDatabase(movie){
+    try {
+		let docId = [];
+        const querySnapshot = await getDocs(favoritesCollection);
+        for (const doc of querySnapshot.docs) {
+            const favoriteMovie = doc.data();
+			if (favoriteMovie.title === movie.title) {
+				docId.push(doc.id);
+			}
+        }
+		const docToDelete = docId[0];
+		await deleteDoc(doc(database, 'favorites', docToDelete));
+    } catch (err){
+        console.log(err.message);
+    }
+}
+
+if(pathName.includes('favorites')){
+	displayFavorites();
+}
 
 //RENDER MOVIES --------------------------------------------------------------------------
 import {fetchMovieApiForFrontpage, scrollMoviesEffect, fetchMovieApiForMoviepage} from './fetchMovies.js';
