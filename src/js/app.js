@@ -3,7 +3,7 @@ import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
 import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc, query} from 'firebase/firestore';
 
-const pathName = window.location.pathname
+const pathName = window.location.pathname;
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
 initializeApp(firebaseConfig);
@@ -155,7 +155,7 @@ function renderUserName(firstname, lastname){
 const renderUsersOnUserProfile = async()=>{
 	try {
 		const currentUser = authService.currentUser;
-		if(currentUser && window.location.pathname === '/src/pages/userProfile.html'){
+		if(currentUser && pathName.includes('/src/pages/userProfile.html')){
 			const querySnapshot = await getDocs(usersCollection);
 			const allUsers = querySnapshot.docs.map((doc)=> doc.data());
 			const signedInUser = allUsers.find((user)=> user.id === currentUser.uid);
@@ -180,7 +180,7 @@ const renderUsersOnUserProfile = async()=>{
 
 const deleteAccountButton = document.querySelector('.delete-account-button');
 
-if(window.location.pathname === '/src/pages/userProfile.html'){
+if(pathName.includes('/src/pages/userProfile.html')){
 	deleteAccountButton.addEventListener('click', async()=>{
 		await deleteAccount();
 		window.location.pathname = '/dist/index.html';
@@ -294,6 +294,6 @@ if(pathName.includes('/dist/index.html')){
 	scrollMoviesEffect();
 }
 
-if(window.location.pathname === '/src/pages/movies.html'){
-	fetchMovieApiForMoviepage(1);
+if(pathName.includes('pages/movies')){
+	fetchMovieApiForMoviepage();
 }

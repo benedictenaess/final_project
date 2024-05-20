@@ -1,6 +1,7 @@
 import apiKey from "./apiKey.js";
 import {filterMovies, sortMovies} from './filterMovies.js';
 
+const pathName = window.location.pathname;
 const selectCategory = document.querySelector('#categories');
 
 let page = 1;
@@ -29,13 +30,15 @@ const fetchMovieApiForFrontpage = async ()=>{
 	}
 }
 
-console.log(movieArray);
+//SORTING MOVIES ----------------------------------------------------------
 
-selectCategory.addEventListener('change', ()=>{
-	sortMovies(movieArray)
-})
+if(pathName.includes('pages/movies.html')){
+	selectCategory.addEventListener('change', ()=>{
+		sortMovies(movieArray)
+	})
+}
 
-//REDNER FRONTPAGE API --------------------------------------
+//REDNER FRONTPAGE API ----------------------------------------------------
 function renderFrontpageApi(movies) {
 	movies.forEach(movie =>{
 		const frontpageContainer = document.querySelector('.all-movies-container');
@@ -90,46 +93,108 @@ async function scrollMoviesEffect (){
 
 //RENDER MOVIESPAGE API ------------------------------------------------
 
-function renderMoviepageApi(moviesWidthID){
-	const moviespageContainer = document.querySelector('.moviespage-movies-section');
-	moviespageContainer.textContent = '';
-	moviesWidthID.forEach(movie =>{
-		const movieContainer = document.createElement('div');
-		const movieImg = document.createElement('img');
+// function renderMoviepageApi(movies){
+// 	const moviespageContainer = document.querySelector('.moviespage-movies-section');
+// 	moviespageContainer.textContent = '';
+
+// 	let currentActiveContainer = null;
+
+// 	movies.forEach(movie =>{
+// 		const movieContainer = document.createElement('div');
+// 		const movieImg = document.createElement('img');
+// 		const infoContainer = document.createElement('div');
+			
+// 		const movieTitle = document.createElement('h4');
+// 		const movieOverview = document.createElement('p');
+// 		const addToFavorites = document.createElement('button');
 	
-		moviespageContainer.append(movieContainer);
-		movieContainer.append(movieImg);
+// 		moviespageContainer.append(movieContainer);
+// 		movieContainer.append(movieImg);
+
 	
-		movieContainer.classList.add('moviespage-movies-container');
+// 		movieContainer.classList.add('moviespage-movies-container');
 	
-		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+// 		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 		
-		const toggleContainer =()=>{
-			let infoContainer = document.querySelector('.moviepage-info-container');
-			if(!infoContainer){
-				const infoContainer = document.createElement('div');
-				const movieTitle = document.createElement('h4');
-				const movieOverview = document.createElement('p');
-				const addToFavorites = document.createElement('button');
+// 		let isClicked = false;
+		
+// 		movieContainer.addEventListener('click',()=>{
+// 			if(currentActiveContainer !== movieContainer){
+
+// 			}
+// 			if(!isClicked){
+// 				movieContainer.append(infoContainer);
+// 				infoContainer.append(movieTitle, movieOverview, addToFavorites);
 				
-				movieTitle.textContent = movie.title;
-				movieOverview.textContent = movie.overview;
-				addToFavorites.textContent = 'Add to Favorites';
+// 				movieTitle.textContent = movie.title;
+// 				movieOverview.textContent = movie.overview;
+// 				addToFavorites.textContent = 'Add to Favorites';
 				
-				movieContainer.classList.add('large-movie-container');
-				infoContainer.classList.add('moviepage-info-container');
+// 				movieContainer.classList.add('large-movie-container');
+// 				infoContainer.classList.add('moviepage-info-container');
 				
-				movieContainer.append(infoContainer);
-				infoContainer.append(movieTitle, movieOverview, addToFavorites);
-			}else{
-				infoContainer.remove();
-				document.querySelectorAll('.moviespage-movies-container').forEach(container => {
-					container.classList.remove('large-movie-container');
-				});
-			}
-		}	
-		movieContainer.addEventListener('click', toggleContainer);
-	})
+// 				isClicked = true;
+// 			} else {
+// 				movieContainer.removeChild(infoContainer);
+// 				infoContainer.removeChild(movieTitle, movieOverview, addToFavorites);
+
+// 				movieContainer.classList.remove('large-movie-container');
+// 				infoContainer.classList.remove('moviepage-info-container');
+				
+// 				isClicked = false;
+// 			  }
+// 		})		
+// 	})
+// }
+
+function renderMoviepageApi(movies){
+    const moviespageContainer = document.querySelector('.moviespage-movies-section');
+    moviespageContainer.textContent = '';
+    
+    let currentClickedContainer = null;
+
+    movies.forEach(movie =>{
+        const movieContainer = document.createElement('div');
+        const movieImg = document.createElement('img');
+        const infoContainer = document.createElement('div');
+        const movieTitle = document.createElement('h4');
+        const movieOverview = document.createElement('p');
+		const movieReleaseDate = document.createElement('p');
+        const addToFavorites = document.createElement('button');
+
+        moviespageContainer.append(movieContainer);
+        movieContainer.append(movieImg);
+
+        movieContainer.classList.add('moviespage-movies-container');
+        movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+        
+        movieContainer.addEventListener('click',()=>{
+            if(currentClickedContainer !== movieContainer) {
+                if(currentClickedContainer !== null) {
+                    const prevInfoContainer = currentClickedContainer.querySelector('.moviepage-info-container');
+                    currentClickedContainer.removeChild(prevInfoContainer);
+                    currentClickedContainer.classList.remove('large-movie-container');
+                }
+                
+                currentClickedContainer = movieContainer;
+                movieContainer.append(infoContainer);
+                infoContainer.append(movieTitle, movieOverview, movieReleaseDate, addToFavorites);
+                
+				movieReleaseDate.textContent = movie.release_date;
+                movieTitle.textContent = movie.title;
+                movieOverview.textContent = movie.overview;
+                addToFavorites.textContent = 'Add to Favorites';
+                
+                movieContainer.classList.add('large-movie-container');
+                infoContainer.classList.add('moviepage-info-container');
+            } else {
+                const prevInfoContainer = currentClickedContainer.querySelector('.moviepage-info-container');
+                currentClickedContainer.removeChild(prevInfoContainer);
+                movieContainer.classList.remove('large-movie-container');
+                currentClickedContainer = null;
+            }
+        })     
+    })
 }
 
 export {scrollMoviesEffect, fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};
