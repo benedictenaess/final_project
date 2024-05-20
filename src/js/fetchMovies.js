@@ -1,14 +1,17 @@
 import apiKey from "./apiKey.js";
-import {filterMovies} from './filterMovies.js';
+import {filterMovies, sortMovies} from './filterMovies.js';
+
+const selectCategory = document.querySelector('#categories');
 
 let page = 1;
-let totalPages = 10;
-let allPages = [];
+
+const movieArray = [];
 
 const fetchMovieApiForMoviepage = async ()=>{
 	try {
 		const response = await fetch('http://localhost:2000/');
 		const data = await response.json();
+		movieArray.push(...data);
 		filterMovies(data);
 	} catch (err){
 		console.log(err.message);
@@ -26,6 +29,11 @@ const fetchMovieApiForFrontpage = async ()=>{
 	}
 }
 
+console.log(movieArray);
+
+selectCategory.addEventListener('change', ()=>{
+	sortMovies(movieArray)
+})
 
 //REDNER FRONTPAGE API --------------------------------------
 function renderFrontpageApi(movies) {

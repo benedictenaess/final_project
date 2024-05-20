@@ -27,16 +27,15 @@ const filterMovies=(movies)=>{
 		button.addEventListener('click', async (e)=>{
 			try {
 				e.preventDefault();
+				sortMovies(movies);
 				const buttonTargetName = button.textContent;
 				if(buttonTargetName){
 					if(buttonTargetName === 'All') {
 						renderMoviepageApi(movies);
-						// sortMovies(movies)
 					} else {
 						const targetID = genreID[buttonTargetName];
 						const renderMovies = movies.filter(movie => movie.genre_ids.includes(targetID));
 						renderMoviepageApi(renderMovies);
-						// sortMovies(renderMovies)
 					}
 				}
 			} catch (err){
@@ -48,25 +47,26 @@ const filterMovies=(movies)=>{
 
 
 function sortMovies(movies){
-	selectCategory.addEventListener('change', ()=>{
-		const targetOption = selectCategory.value;
-		switch (targetOption) {
-			case 'highest-rating':
-				movies.sort((a, b)=> a.popularity - b.popularity);
-				break;
-			case 'lowest-rating':
-				movies.sort((a, b)=> b.popularity - a.popularity);
-				break;
-			case 'newest-release':
-				movies.sort((a, b)=> new Date(a.release_date) - new Date(b.release_date));
-				break;
-			case 'oldest-release':
-				movies.sort((a, b)=> new Date(b.release_date) - new Date(a.release_date));
-				break;
-			default:
-				break;
-		}
-	})
+	const targetOption = selectCategory.value;
+	let comparator;
+	switch (targetOption) {
+		case 'highest-rating':
+			comparator = (a, b)=> b.vote_average - a.vote_average;
+			break;
+		case 'lowest-rating':
+			comparator = (a, b)=> a.vote_average - b.vote_average;
+			break;
+		case 'newest-release':
+			comparator = (a, b)=> new Date(b.release_date).getTime() - new Date(a.release_date).getTime();
+			break;
+		case 'title':
+			comparator = (a, b)=> a.original_title.localeCompare(b.original_title);
+			break;
+		default:
+			break;
+	}
+	movies.sort(comparator);
+	renderMoviepageApi(movies);
 }
 
 export {fetchGenreId, filterMovies, sortMovies};
