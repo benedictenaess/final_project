@@ -1,5 +1,6 @@
 import apiKey from "./apiKey.js";
 import {filterMovies, sortMovies} from './filterMovies.js';
+import {saveFavoriteMoviesToDatabase} from './app.js';
 
 const pathName = window.location.pathname;
 const selectCategory = document.querySelector('#categories');
@@ -91,62 +92,11 @@ async function scrollMoviesEffect (){
 	}
 }
 
+//SAVING MOVIES TO FAVORITEARRAY
+const favoriteMoviesArray = [];
+
+
 //RENDER MOVIESPAGE API ------------------------------------------------
-
-// function renderMoviepageApi(movies){
-// 	const moviespageContainer = document.querySelector('.moviespage-movies-section');
-// 	moviespageContainer.textContent = '';
-
-// 	let currentActiveContainer = null;
-
-// 	movies.forEach(movie =>{
-// 		const movieContainer = document.createElement('div');
-// 		const movieImg = document.createElement('img');
-// 		const infoContainer = document.createElement('div');
-			
-// 		const movieTitle = document.createElement('h4');
-// 		const movieOverview = document.createElement('p');
-// 		const addToFavorites = document.createElement('button');
-	
-// 		moviespageContainer.append(movieContainer);
-// 		movieContainer.append(movieImg);
-
-	
-// 		movieContainer.classList.add('moviespage-movies-container');
-	
-// 		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-		
-// 		let isClicked = false;
-		
-// 		movieContainer.addEventListener('click',()=>{
-// 			if(currentActiveContainer !== movieContainer){
-
-// 			}
-// 			if(!isClicked){
-// 				movieContainer.append(infoContainer);
-// 				infoContainer.append(movieTitle, movieOverview, addToFavorites);
-				
-// 				movieTitle.textContent = movie.title;
-// 				movieOverview.textContent = movie.overview;
-// 				addToFavorites.textContent = 'Add to Favorites';
-				
-// 				movieContainer.classList.add('large-movie-container');
-// 				infoContainer.classList.add('moviepage-info-container');
-				
-// 				isClicked = true;
-// 			} else {
-// 				movieContainer.removeChild(infoContainer);
-// 				infoContainer.removeChild(movieTitle, movieOverview, addToFavorites);
-
-// 				movieContainer.classList.remove('large-movie-container');
-// 				infoContainer.classList.remove('moviepage-info-container');
-				
-// 				isClicked = false;
-// 			  }
-// 		})		
-// 	})
-// }
-
 function renderMoviepageApi(movies){
     const moviespageContainer = document.querySelector('.moviespage-movies-section');
     moviespageContainer.textContent = '';
@@ -162,6 +112,11 @@ function renderMoviepageApi(movies){
 		const movieReleaseDate = document.createElement('p');
         const addToFavorites = document.createElement('button');
 
+		addToFavorites.addEventListener('click',(e)=>{
+			e.preventDefault();
+			saveFavoriteMoviesToDatabase(movie);
+		})
+
         moviespageContainer.append(movieContainer);
         movieContainer.append(movieImg);
 
@@ -170,6 +125,7 @@ function renderMoviepageApi(movies){
         
         movieContainer.addEventListener('click',()=>{
             if(currentClickedContainer !== movieContainer) {
+
                 if(currentClickedContainer !== null) {
                     const prevInfoContainer = currentClickedContainer.querySelector('.moviepage-info-container');
                     currentClickedContainer.removeChild(prevInfoContainer);
@@ -187,6 +143,7 @@ function renderMoviepageApi(movies){
                 
                 movieContainer.classList.add('large-movie-container');
                 infoContainer.classList.add('moviepage-info-container');
+
             } else {
                 const prevInfoContainer = currentClickedContainer.querySelector('.moviepage-info-container');
                 currentClickedContainer.removeChild(prevInfoContainer);
@@ -195,6 +152,17 @@ function renderMoviepageApi(movies){
             }
         })     
     })
+}
+
+
+
+if(pathName.includes('/dist/index.html')){
+	fetchMovieApiForFrontpage(1);
+	scrollMoviesEffect();
+}
+
+if(pathName.includes('pages/movies')){
+	fetchMovieApiForMoviepage();
 }
 
 export {scrollMoviesEffect, fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};

@@ -1,7 +1,7 @@
 import firebaseConfig from "./firebaseConfig.js";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
-import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc, query} from 'firebase/firestore';
+import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
 
 const pathName = window.location.pathname;
 
@@ -10,6 +10,7 @@ initializeApp(firebaseConfig);
 const authService = getAuth();
 const database = getFirestore();
 const usersCollection = collection(database, 'users');
+const favoritesCollection = collection(database, 'favorites');
 
 //ACTIVE NAV
 const homeNavButton = document.querySelector('.home-nav');
@@ -285,9 +286,32 @@ onAuthStateChanged(authService, (user)=>{
 	}
 })
 
-import { fetchMovieApiForFrontpage, scrollMoviesEffect, fetchMovieApiForMoviepage } from "./fetchMovies.js";
 
 
+async function saveFavoriteMoviesToDatabase(movie) {
+    try {
+		const querySnapshot = await getDocs(favoritesCollection);
+		const existingMovies = querySnapshot.docs.map(doc => doc.data());
+		const isExisting = existingMovies.some(existingMovie => existingMovie.title === movie.original_title);
+		if(!isExisting){
+			const newMovie = {
+				title: movie.original_title,
+				releaseDate: movie.release_date,
+				img: movie.backdrop_path,
+				overview: movie.overview
+			};	
+			await addDoc(favoritesCollection, newMovie);
+			console.log(`${newMovie.title} has been added to favorites`);
+		} else {
+			console.log('This movie already exists');
+			return;
+		}
+    } catch(err) {
+        console.log(err.message);
+    }
+}
+
+import {fetchMovieApiForFrontpage, scrollMoviesEffect, fetchMovieApiForMoviepage} from './fetchMovies.js';
 
 if(pathName.includes('/dist/index.html')){
 	fetchMovieApiForFrontpage(1);
@@ -297,3 +321,5 @@ if(pathName.includes('/dist/index.html')){
 if(pathName.includes('pages/movies')){
 	fetchMovieApiForMoviepage();
 }
+
+export {saveFavoriteMoviesToDatabase}
