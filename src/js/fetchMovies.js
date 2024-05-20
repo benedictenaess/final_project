@@ -109,12 +109,18 @@ function renderMoviepageApi(movies){
         const infoContainer = document.createElement('div');
         const movieTitle = document.createElement('h4');
         const movieOverview = document.createElement('p');
-		const movieReleaseDate = document.createElement('p');
+		const movieReleaseDate = document.createElement('span');
         const addToFavorites = document.createElement('button');
+		const textArea = document.createElement('textarea');
 
 		addToFavorites.addEventListener('click',(e)=>{
 			e.preventDefault();
-			saveFavoriteMoviesToDatabase(movie);
+			if(textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!'){
+				const movieReview = textArea.value.charAt(1).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
+				saveFavoriteMoviesToDatabase(movie, movieReview);
+			} else {
+				saveFavoriteMoviesToDatabase(movie);
+			}
 		})
 
         moviespageContainer.append(movieContainer);
@@ -123,7 +129,11 @@ function renderMoviepageApi(movies){
         movieContainer.classList.add('moviespage-movies-container');
         movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
         
-        movieContainer.addEventListener('click',()=>{
+        movieContainer.addEventListener('click',(e)=>{
+			if(e.target === textArea){
+				textArea.textContent = '';
+				return;
+			} 
             if(currentClickedContainer !== movieContainer) {
 
                 if(currentClickedContainer !== null) {
@@ -134,11 +144,12 @@ function renderMoviepageApi(movies){
                 
                 currentClickedContainer = movieContainer;
                 movieContainer.append(infoContainer);
-                infoContainer.append(movieTitle, movieOverview, movieReleaseDate, addToFavorites);
+                infoContainer.append(movieTitle, movieOverview, movieReleaseDate,textArea, addToFavorites);
                 
 				movieReleaseDate.textContent = movie.release_date;
                 movieTitle.textContent = movie.title;
                 movieOverview.textContent = movie.overview;
+				textArea.textContent = 'Write Your Review Here!';
                 addToFavorites.textContent = 'Add to Favorites';
                 
                 movieContainer.classList.add('large-movie-container');
@@ -150,7 +161,7 @@ function renderMoviepageApi(movies){
                 movieContainer.classList.remove('large-movie-container');
                 currentClickedContainer = null;
             }
-        })     
+        })    
     })
 }
 

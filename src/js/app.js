@@ -286,20 +286,34 @@ onAuthStateChanged(authService, (user)=>{
 	}
 })
 
-async function saveFavoriteMoviesToDatabase(movie) {
+async function saveFavoriteMoviesToDatabase(movie, movieReview) {
     try {
 		const querySnapshot = await getDocs(favoritesCollection);
 		const existingMovies = querySnapshot.docs.map(doc => doc.data());
 		const isExisting = existingMovies.some(existingMovie => existingMovie.title === movie.original_title);
 		if(!isExisting){
-			const newMovie = {
-				title: movie.original_title,
-				releaseDate: movie.release_date,
-				img: movie.poster_path,
-				overview: movie.overview
-			};	
-			await addDoc(favoritesCollection, newMovie);
-			console.log(`${newMovie.title} has been added to favorites`);
+			if(movieReview){
+				const newMovie = {
+					title: movie.original_title,
+					releaseDate: movie.release_date,
+					img: movie.poster_path,
+					overview: movie.overview,
+					review: movieReview
+				};	
+				console.log(movieReview);
+				await addDoc(favoritesCollection, newMovie);
+				console.log(`${newMovie.title} has been added to favorites`);
+			} else {
+				const newMovie = {
+					title: movie.original_title,
+					releaseDate: movie.release_date,
+					img: movie.poster_path,
+					overview: movie.overview
+				};
+				console.log(movieReview);
+				await addDoc(favoritesCollection, newMovie);
+				console.log(`${newMovie.title} has been added to favorites`);
+			}
 		} else {
 			console.log('This movie already exists');
 			return;
@@ -334,6 +348,7 @@ function rednerFavoriteMovies(movie){
 		const infoContainer = document.createElement('div');
 		const movieTitle = document.createElement('h2');
 		const movieReleaseDate = document.createElement('p');
+		const movieReview = document.createElement('span');
 		const movieOverview = document.createElement('p');
 		const deleteFavoriteMovie = document.createElement('button');
 
@@ -341,14 +356,15 @@ function rednerFavoriteMovies(movie){
 		movieReleaseDate.textContent = `Release date: ${movie.releaseDate}`;
 		movieOverview.textContent = movie.overview;
 		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.img}`;
-		deleteFavoriteMovie.textContent = 'Remove from Favorites'
+		deleteFavoriteMovie.textContent = 'Remove from Favorites';
+		movieReview.textContent = movie.review ? `User review: ${movie.review}` : '';
 
 		movieContainer.classList.add('each-favorite-movie-container');
 		infoContainer.classList.add('favorite-movie-info');
 		
 		favoriteMoviesContainer.append(movieContainer);
 		movieContainer.append(movieImg, infoContainer);
-		infoContainer.append(movieTitle, movieReleaseDate, movieOverview, deleteFavoriteMovie);
+		infoContainer.append(movieTitle, movieReleaseDate, movieOverview, movieReview, deleteFavoriteMovie);
 
 		deleteFavoriteMovie.addEventListener('click', (e)=>{
 			const removeContainer = e.target.parentElement.parentElement;

@@ -15,7 +15,7 @@ app.listen(PORT, ()=>{
 const {API_KEY} = process.env
 
 app.get('/', async (req, res)=>{
-	const totalPages = 5;
+	const totalPages = 10;
 	const allMovies = [];
 	try {
 		for(let page = 1; page <= totalPages; page++){
