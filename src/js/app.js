@@ -157,18 +157,23 @@ const signInUser = async ()=>{
 	}
 };
 
-
-
 if(signInButton){
-	signInButton.addEventListener('click', (e)=>{
+	signInButton.addEventListener('click', async (e)=>{
 		e.preventDefault();
 		const userEmail = signInEmail.value.toLowerCase().trim();
 		const userPassword = signInPassword.value.trim();
-		const signInValidationStatus = validateSignInForm(userEmail, userPassword, signInEmailErrorSpan, signInPasswordErrorSpan)
-		console.log(signInValidationStatus);
-		if(!signInValidationStatus){
-			signInUser();
-		} 
+
+		try {
+			const emailExists = await findEmail(userEmail)
+	
+			const signInValidationStatus = validateSignInForm(userEmail, userPassword, signInEmailErrorSpan, signInPasswordErrorSpan, emailExists)
+			console.log(signInValidationStatus);
+			if(!signInValidationStatus){
+				await signInUser();
+			} 
+		} catch (err){
+			console.log(err.message);
+		}
 	})
 }
 

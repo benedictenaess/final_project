@@ -1,4 +1,4 @@
-const validateSignInForm = (emailInput, passwordInput, emailErrorSpan, passwordErrorSpan) => {
+const validateSignInForm = (emailInput, passwordInput, emailErrorSpan, passwordErrorSpan, emailExists) => {
 	let errors = {
 		errorStatus: false,
 	  	emailErrorMsg: '',
@@ -12,6 +12,9 @@ const validateSignInForm = (emailInput, passwordInput, emailErrorSpan, passwordE
 	} else if (!emailRegex.test(emailInput)) {
 		errors.errorStatus = true;
 	  	errors.emailErrorMsg = 'Email must be a valid email';
+	} else if (!emailExists) {
+		errors.errorStatus = true;
+	  	errors.emailErrorMsg = 'This email is not registered to a user';
 	}
   
 	if (!passwordInput) {
