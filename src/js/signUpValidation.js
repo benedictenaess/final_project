@@ -1,4 +1,4 @@
-const validateSignUpForm =(firstnameInput, lastnameInput, genreInput, emailInput, passwordInput, firstnameErrorSpan, lastnameErrorSpan, genreErrorSpan, emailErrorSpan, passwordErrorSpan)=>{
+const validateSignUpForm =(firstnameInput, lastnameInput, genreInput, emailInput, passwordInput, firstnameErrorSpan, lastnameErrorSpan, genreErrorSpan, emailErrorSpan, passwordErrorSpan, emailExists)=>{
 	let errors = {
 		errorStatus: false,
 		firstnameErrorMsg: '',
@@ -32,7 +32,12 @@ const validateSignUpForm =(firstnameInput, lastnameInput, genreInput, emailInput
 	const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 	if(emailInput){
 		if(emailRegex.test(emailInput)){
-			errors.emailErrorMsg = '';
+			if(emailExists === false){
+				errors.emailErrorMsg = '';
+			} else {
+				errors.errorStatus = true;
+				errors.emailErrorMsg = 'This Email already exists';
+			}
 		} else {
 			errors.errorStatus = true;
 			errors.emailErrorMsg = 'Email must be an email';

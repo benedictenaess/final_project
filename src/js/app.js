@@ -58,7 +58,20 @@ function pageNavigation(){
 	})
 }
 
-//SIGN UP ------------------------
+//FIND EMAIL IN AUTH ---------------------------------------------
+async function findEmail(emailFromInput){
+	try {
+		const querySnapshot = await getDocs(usersCollection);
+		const allUsers = querySnapshot.docs.map((doc)=> doc.data());
+		const emailExists = allUsers.some(user => user.email === emailFromInput)
+		return emailExists;
+	} catch (err){
+		console.log(err.message);
+		return false;
+	}
+}
+
+//SIGN UP ----------------------------------------------------------------
 const signUpEmail = document.querySelector('.signup-email');
 const signUpPassword = document.querySelector('.signup-password');
 const signUpFirstname = document.querySelector('#firstname');
@@ -100,19 +113,25 @@ const signUpUser = async ()=>{
 };
 
 if(signUpButton){
-	signUpButton.addEventListener('click', (e)=>{
+	signUpButton.addEventListener('click', async (e)=>{
 		e.preventDefault();
 		const firstnameValue = signUpFirstname.value.charAt(0).toUpperCase() + signUpFirstname.value.slice(1).toLowerCase().trim();
 		const lastnameValue = signUpLastname.value.charAt(0).toUpperCase() + signUpLastname.value.slice(1).toLowerCase().trim();
-
-		const signUpValidationStatus = validateSignUpForm(firstnameValue, lastnameValue, signUpGenre.value, signUpEmail.value.toLowerCase().trim(), signUpPassword.value.trim(), signUpFirstnameErrorSpan, signUpLastnameErrorSpan, signUpGenreErrorSpan, signUpEmailErrorSpan, signUpPasswordErrorSpan);
+		const emailValue = signUpEmail.value.toLowerCase().trim();
 		
-		console.log(signUpValidationStatus);
+		try {
+			const emailExists = await findEmail(emailValue);
+			const signUpValidationStatus = validateSignUpForm(firstnameValue, lastnameValue, signUpGenre.value, emailValue, signUpPassword.value.trim(), signUpFirstnameErrorSpan, signUpLastnameErrorSpan, signUpGenreErrorSpan, signUpEmailErrorSpan, signUpPasswordErrorSpan, emailExists);
 
-		if(!signUpValidationStatus){
-			signUpUser();
-		} else {
-			return;
+			console.log(signUpValidationStatus);
+			
+			if(!signUpValidationStatus){
+				await signUpUser();
+			} else {
+				return;
+			}
+		} catch (err){
+			console.log(err.message);
 		}
 	})
 }
