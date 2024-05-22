@@ -7,13 +7,19 @@ const pathName = window.location.pathname;
 
 
 //VALIDATION -----------------------------------------------------------------------------------
-import { validateSignInForm } from "./validation";
+import { validateSignInForm } from "./signInValidation";
+import {validateSignUpForm} from './signUpValidation';
 
 const signInEmail = document.querySelector('.signin-email');
 const signInPassword = document.querySelector('.signin-password');
 const signInEmailErrorSpan = document.querySelector('.email-signin-error-span');
 const signInPasswordErrorSpan = document.querySelector('.password-signin-error-span');
 
+const signUpFirstnameErrorSpan = document.querySelector('.firstname-signup-error-span');
+const signUpLastnameErrorSpan = document.querySelector('.lastname-signup-error-span');
+const signUpGenreErrorSpan = document.querySelector('.genre-signup-error-span');
+const signUpEmailErrorSpan = document.querySelector('.email-signup-error-span');
+const signUpPasswordErrorSpan = document.querySelector('.password-signup-error-span');
 
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
@@ -96,18 +102,29 @@ const signUpUser = async ()=>{
 if(signUpButton){
 	signUpButton.addEventListener('click', (e)=>{
 		e.preventDefault();
-		signUpUser();
+		const firstnameValue = signUpFirstname.value.charAt(0).toUpperCase() + signUpFirstname.value.slice(1).toLowerCase().trim();
+		const lastnameValue = signUpLastname.value.charAt(0).toUpperCase() + signUpLastname.value.slice(1).toLowerCase().trim();
+
+		const signUpValidationStatus = validateSignUpForm(firstnameValue, lastnameValue, signUpGenre.value, signUpEmail.value.toLowerCase().trim(), signUpPassword.value.trim(), signUpFirstnameErrorSpan, signUpLastnameErrorSpan, signUpGenreErrorSpan, signUpEmailErrorSpan, signUpPasswordErrorSpan);
+		
+		console.log(signUpValidationStatus);
+
+		if(!signUpValidationStatus){
+			signUpUser();
+		} else {
+			return;
+		}
 	})
 }
 
 //SIGN IN ------------------------
 const signInButton = document.querySelector('.sign-in-button_submit');
 const signInForm = document.querySelector('.sign-in-form');
-const userEmail = signInEmail.value.toLowerCase().trim();
-const userPassword = signInPassword.value.trim();
 
 const signInUser = async ()=>{
 	try {
+		const userEmail = signInEmail.value.toLowerCase().trim();
+		const userPassword = signInPassword.value.trim();
 		const userCredential = await signInWithEmailAndPassword(authService, userEmail, userPassword);
 		console.log('The user has successfully signed in');
 		
@@ -126,10 +143,13 @@ const signInUser = async ()=>{
 if(signInButton){
 	signInButton.addEventListener('click', (e)=>{
 		e.preventDefault();
-		const {signinValidationStatus} = validateSignInForm(signInEmail.value.trim().toLowerCase(), signInPassword.value.trim(), signInEmailErrorSpan, signInPasswordErrorSpan);
-		if(!signinValidationStatus){
+		const userEmail = signInEmail.value.toLowerCase().trim();
+		const userPassword = signInPassword.value.trim();
+		const signInValidationStatus = validateSignInForm(userEmail, userPassword, signInEmailErrorSpan, signInPasswordErrorSpan)
+		console.log(signInValidationStatus);
+		if(!signInValidationStatus){
 			signInUser();
-		}
+		} 
 	})
 }
 
