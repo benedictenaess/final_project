@@ -1,4 +1,4 @@
-import firebaseConfig from "./firebaseConfig.js";
+import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
 import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
@@ -401,7 +401,7 @@ if(pathName.includes('favorites')){
 }
 
 //RENDER MOVIES --------------------------------------------------------------------------
-import {fetchMovieApiForFrontpage, scrollMoviesEffect, fetchMovieApiForMoviepage} from './fetchMovies.js';
+import {fetchMovieApiForFrontpage, scrollMoviesEffect, fetchMovieApiForMoviepage} from './fetchMovies';
 
 if(pathName.includes('/dist/index.html')){
 	fetchMovieApiForFrontpage(1);

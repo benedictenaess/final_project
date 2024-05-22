@@ -1,6 +1,6 @@
-import apiKey from "./apiKey.js";
-import {filterMovies, sortMovies} from './filterMovies.js';
-import {saveFavoriteMoviesToDatabase} from './app.js';
+import apiKey from "./apiKey";
+import {filterMovies, sortMovies} from './filterMovies';
+import {saveFavoriteMoviesToDatabase} from './app';
 
 const pathName = window.location.pathname;
 const selectCategory = document.querySelector('#categories');
