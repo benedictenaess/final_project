@@ -32,11 +32,11 @@ const validateSignUpForm =(firstnameInput, lastnameInput, genreInput, emailInput
 	const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 	if(emailInput){
 		if(emailRegex.test(emailInput)){
-			if(emailExists === false){
+			if(!emailExists){
 				errors.emailErrorMsg = '';
 			} else {
 				errors.errorStatus = true;
-				errors.emailErrorMsg = 'This Email already exists';
+				errors.emailErrorMsg = 'This email is already registered to a user';
 			}
 		} else {
 			errors.errorStatus = true;
