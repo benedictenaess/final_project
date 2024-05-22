@@ -1,4 +1,4 @@
-const validateSignInForm = (emailInput, passwordInput, emailErrorSpan, passwordErrorSpan, emailExists) => {
+const validateSignInForm = (emailInput, passwordInput, emailErrorSpan, passwordErrorSpan, emailExists, userPassword) => {
 	let errors = {
 		errorStatus: false,
 	  	emailErrorMsg: '',
@@ -15,6 +15,8 @@ const validateSignInForm = (emailInput, passwordInput, emailErrorSpan, passwordE
 	} else if (!emailExists) {
 		errors.errorStatus = true;
 	  	errors.emailErrorMsg = 'This email is not registered to a user';
+	} else {
+		errors.emailErrorMsg = '';
 	}
   
 	if (!passwordInput) {
@@ -23,6 +25,11 @@ const validateSignInForm = (emailInput, passwordInput, emailErrorSpan, passwordE
 	} else if (passwordInput.length < 6) {
 	  	errors.errorStatus = true;
 	  	errors.passwordErrorMsg = 'Password must be at least 6 characters';
+	} else if (userPassword !== null && passwordInput !== userPassword) {
+        errors.errorStatus = true;
+        errors.passwordErrorMsg = 'The password is incorrect';
+	} else {
+		errors.passwordErrorMsg = '';
 	}
   
 	emailErrorSpan.textContent = errors.emailErrorMsg;

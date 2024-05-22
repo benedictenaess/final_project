@@ -58,13 +58,18 @@ function pageNavigation(){
 	})
 }
 
-//FIND EMAIL IN AUTH ---------------------------------------------
+//FIND EMAIL AND PASSWORD IN AUTH ---------------------------------------------
 async function findEmail(emailFromInput){
 	try {
 		const querySnapshot = await getDocs(usersCollection);
 		const allUsers = querySnapshot.docs.map((doc)=> doc.data());
-		const emailExists = allUsers.some(user => user.email === emailFromInput)
-		return emailExists;
+		const emailExists = allUsers.some(user => user.email === emailFromInput);
+		let existingEmailPassword = null;
+		if(emailExists){
+			const userFromInput = allUsers.find(user => user.email === emailFromInput);
+			existingEmailPassword = userFromInput.password;	
+		}
+		return {emailExists, existingEmailPassword};
 	} catch (err){
 		console.log(err.message);
 		return false;
@@ -164,9 +169,9 @@ if(signInButton){
 		const userPassword = signInPassword.value.trim();
 
 		try {
-			const emailExists = await findEmail(userEmail)
+			const {emailExists, existingEmailPassword} = await findEmail(userEmail);
 	
-			const signInValidationStatus = validateSignInForm(userEmail, userPassword, signInEmailErrorSpan, signInPasswordErrorSpan, emailExists)
+			const signInValidationStatus = validateSignInForm(userEmail, userPassword, signInEmailErrorSpan, signInPasswordErrorSpan, emailExists, existingEmailPassword);
 			console.log(signInValidationStatus);
 			if(!signInValidationStatus){
 				await signInUser();
