@@ -335,6 +335,7 @@ if(signUpToggle){
 	});
 }
 
+//USER AUTH STATE ----------------------------------------------------------------------
 onAuthStateChanged(authService, (user)=>{
 	if(user){
 		console.log('user is logged in');
@@ -348,6 +349,9 @@ onAuthStateChanged(authService, (user)=>{
 		signOutDisplay();
 	}
 })
+
+//ADD TO FAVORITES ----------------------------------------------------------------------
+const addToFavoritesContainer = document.querySelector('.add-to-favorites');
 
 async function saveFavoriteMoviesToDatabase(movie, movieReview) {
     try {
@@ -363,9 +367,9 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
 					overview: movie.overview,
 					review: movieReview
 				};	
-				console.log(movieReview);
 				await addDoc(favoritesCollection, newMovie);
 				console.log(`${newMovie.title} has been added to favorites`);
+
 			} else {
 				const newMovie = {
 					title: movie.original_title,
@@ -373,17 +377,26 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
 					img: movie.poster_path,
 					overview: movie.overview
 				};
-				console.log(movieReview);
 				await addDoc(favoritesCollection, newMovie);
-				console.log(`${newMovie.title} has been added to favorites`);
+				renderFavoritesToast(newMovie.title, 'has been added to favorites');
 			}
 		} else {
 			console.log('This movie already exists');
-			return;
+			renderFavoritesToast('This movie has already been added to favorites');
 		}
     } catch(err) {
         console.log(err.message);
     }
+}
+
+function renderFavoritesToast(displayMovie, displayText=''){
+	const addToFavoritesDisplay = document.createElement('div');
+	addToFavoritesContainer.append(addToFavoritesDisplay);
+	addToFavoritesDisplay.classList.add('add-to-favorites-display');
+	addToFavoritesDisplay.textContent = `${displayMovie} ${displayText}`;
+	setTimeout(() => {
+		addToFavoritesContainer.removeChild(addToFavoritesDisplay);
+	}, 2000);		
 }
 
 //RENDER FAVORITE MOVIES -----------------------------------------------------------------
