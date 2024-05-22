@@ -1,9 +1,20 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, fetchSignInMethodsForEmail} from 'firebase/auth';
 import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
 
 const pathName = window.location.pathname;
+
+
+//VALIDATION -----------------------------------------------------------------------------------
+import { validateSignInForm } from "./validation";
+
+const signInEmail = document.querySelector('.signin-email');
+const signInPassword = document.querySelector('.signin-password');
+const signInEmailErrorSpan = document.querySelector('.email-signin-error-span');
+const signInPasswordErrorSpan = document.querySelector('.password-signin-error-span');
+
+
 
 //INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
 initializeApp(firebaseConfig);
@@ -90,18 +101,16 @@ if(signUpButton){
 }
 
 //SIGN IN ------------------------
-const signInEmail = document.querySelector('.signin-email');
-const signInPassword = document.querySelector('.signin-password');
 const signInButton = document.querySelector('.sign-in-button_submit');
 const signInForm = document.querySelector('.sign-in-form');
+const userEmail = signInEmail.value.toLowerCase().trim();
+const userPassword = signInPassword.value.trim();
 
 const signInUser = async ()=>{
-	const userEmail = signInEmail.value.toLowerCase().trim();
-	const userPassword = signInPassword.value.trim();
 	try {
 		const userCredential = await signInWithEmailAndPassword(authService, userEmail, userPassword);
 		console.log('The user has successfully signed in');
-
+		
 		const signedInUserID = userCredential.user.uid;
 		const querySnapshot = await getDocs(usersCollection);
 		const allUsers = querySnapshot.docs.map((doc)=> doc.data());
@@ -112,10 +121,15 @@ const signInUser = async ()=>{
 	}
 };
 
+
+
 if(signInButton){
 	signInButton.addEventListener('click', (e)=>{
 		e.preventDefault();
-		signInUser();
+		const {signinValidationStatus} = validateSignInForm(signInEmail.value.trim().toLowerCase(), signInPassword.value.trim(), signInEmailErrorSpan, signInPasswordErrorSpan);
+		if(!signinValidationStatus){
+			signInUser();
+		}
 	})
 }
 
