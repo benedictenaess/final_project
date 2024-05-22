@@ -165,15 +165,4 @@ function renderMoviepageApi(movies){
     })
 }
 
-
-
-if(pathName.includes('/dist/index.html')){
-	fetchMovieApiForFrontpage(1);
-	scrollMoviesEffect();
-}
-
-if(pathName.includes('pages/movies')){
-	fetchMovieApiForMoviepage();
-}
-
 export {scrollMoviesEffect, fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};
