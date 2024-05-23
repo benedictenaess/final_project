@@ -2,19 +2,19 @@ import apiKey from "./apiKey";
 import {renderMoviepageApi} from './fetchMovies';
 
 const genreID = {};
-
 const fetchGenreId = async ()=>{
 	try {
-		const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`);
-		const data = await response.json();
-		const allGenres = data.genres;
+		const response = await fetch('http://localhost:3000/');
+		const allGenres = await response.json();
 		allGenres.forEach(genre=>{
 			genreID[genre.name] = genre.id;
 		})
+		console.log(allGenres);
 	} catch (err){
 		console.log(err.message);
 	}
 }
+console.log(genreID);
 
 fetchGenreId();
 

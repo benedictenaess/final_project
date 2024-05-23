@@ -79,18 +79,18 @@ function renderFrontpageApi(movies) {
 	})
 }
 
-async function scrollMoviesEffect (){
-	try {
-		window.addEventListener('scroll', ()=>{
-			if(window.scrollY + window.innerHeight >= document.body.scrollHeight) {
-				page ++ ; 
-				fetchMovieApiForFrontpage(page)
-			}
-		})
-	} catch(err){
-		console.log(err.message);
-	}
-}
+// async function scrollMoviesEffect (){
+// 	try {
+// 		window.addEventListener('scroll', ()=>{
+// 			if(window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+// 				page ++ ; 
+// 				fetchMovieApiForFrontpage(page)
+// 			}
+// 		})
+// 	} catch(err){
+// 		console.log(err.message);
+// 	}
+// }
 
 //SAVING MOVIES TO FAVORITEARRAY
 const favoriteMoviesArray = [];
@@ -165,4 +165,4 @@ function renderMoviepageApi(movies){
     })
 }
 
-export {scrollMoviesEffect, fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};
+export {fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};
