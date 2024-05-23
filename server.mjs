@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 import 'dotenv/config';
 
 const PORT = 2000;
+
 const app = express();
 
 app.use(cors());
@@ -11,6 +12,7 @@ app.use(cors());
 app.listen(PORT, ()=>{
 	console.log(`THE SERVER IS RUNNING ON PORT: ${PORT}`);
 });
+
 
 const {API_KEY} = process.env
 
