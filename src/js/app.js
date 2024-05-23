@@ -1,6 +1,6 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, fetchSignInMethodsForEmail} from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
 import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
 
 const pathName = window.location.pathname;
@@ -75,6 +75,25 @@ async function findEmail(emailFromInput){
 		return false;
 	}
 }
+
+//FIND USER FAVORITE GENRE ------------------------------------------------------
+
+async function userFavoriteGenre(){
+	try {
+		const currentSignedinUser = authService.currentUser;
+		const signedInUserUid = currentSignedinUser.uid;
+	
+		const querySnapshot = await getDocs(usersCollection);
+		const allUsers = querySnapshot.docs.map((doc)=>doc.data());
+		const currentUser = allUsers.find(user => user.id === signedInUserUid);
+		const currentUserFavoriteGenre = currentUser.genre;
+	
+		return currentUserFavoriteGenre;
+	} catch(err){
+		console.log(err.message);
+	}
+}
+
 
 //SIGN UP ----------------------------------------------------------------
 const signUpEmail = document.querySelector('.signup-email');
@@ -255,7 +274,7 @@ const deleteAccount = async ()=>{
 	try {
 		const currentSignedinUser = authService.currentUser;
 		const signedInUserUid = currentSignedinUser.uid;
-		
+
 		const querySnapshot = await getDocs(usersCollection);
 		const usersWithUserIdAndUid = [];
 		querySnapshot.forEach(doc =>{
@@ -402,6 +421,7 @@ function renderFavoritesToast(displayMovie, displayText=''){
 //RENDER FAVORITE MOVIES -----------------------------------------------------------------
 const favoriteMoviesContainer = document.querySelector('.favorite-movies-container');
 
+
 async function displayFavorites(){
 	try {
 		favoriteMoviesContainer.textContent = '';
@@ -479,8 +499,9 @@ if(pathName.includes('favorites')){
 //RENDER MOVIES --------------------------------------------------------------------------
 import {fetchMovies} from './fetchMovies';
 
-if(pathName.includes('pages/movies') || pathName.includes('/dist/index.html')){
-	fetchMovies();
+if (pathName.includes('pages/movies') || pathName.includes('/dist/index.html')) {
+    fetchMovies();
 }
 
-export {saveFavoriteMoviesToDatabase}
+
+export {saveFavoriteMoviesToDatabase, userFavoriteGenre}
