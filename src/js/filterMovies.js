@@ -1,4 +1,3 @@
-import apiKey from "./apiKey";
 import {renderMoviepageApi} from './fetchMovies';
 
 const genreID = {};
@@ -9,12 +8,10 @@ const fetchGenreId = async ()=>{
 		allGenres.forEach(genre=>{
 			genreID[genre.name] = genre.id;
 		})
-		console.log(allGenres);
 	} catch (err){
 		console.log(err.message);
 	}
 }
-console.log(genreID);
 
 fetchGenreId();
 
@@ -45,7 +42,6 @@ const filterMovies=(movies)=>{
 	})
 }
 
-
 function sortMovies(movies){
 	const targetOption = selectCategory.value;
 	let comparator;
@@ -69,4 +65,4 @@ function sortMovies(movies){
 	renderMoviepageApi(movies);
 }
 
-export {fetchGenreId, filterMovies, sortMovies};
+export {fetchGenreId, filterMovies, sortMovies, genreID};
