@@ -65,4 +65,4 @@ function sortMovies(movies){
 	renderMoviepageApi(movies);
 }
 
-export {fetchGenreId, filterMovies, sortMovies, genreID};
+export {filterMovies, sortMovies, genreID};

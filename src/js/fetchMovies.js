@@ -1,10 +1,8 @@
-import {filterMovies, sortMovies} from './filterMovies';
-import {saveFavoriteMoviesToDatabase} from './app';
+import {filterMovies, sortMovies, genreID} from './filterMovies';
+import {saveFavoriteMoviesToDatabase, userFavoriteGenre} from './app';
 
 const pathName = window.location.pathname;
 const selectCategory = document.querySelector('#categories');
-
-let page = 1;
 
 const movieArray = [];
 
@@ -16,7 +14,11 @@ const fetchMovies = async ()=>{
 		if(pathName.includes('pages/movies')){
 			filterMovies(data);
 		} else if(pathName.includes('index')){
-			renderFrontpageApi(data);
+			try {
+				await renderFrontpageApi(data);
+			} catch(err){
+				console.log(err.message);
+			}
 		}
 	} catch (err){
 		console.log(err.message);
@@ -32,42 +34,65 @@ if(pathName.includes('pages/movies.html')){
 }
 
 //REDNER FRONTPAGE API ----------------------------------------------------
-function renderFrontpageApi(movies) {
-	movies.forEach(movie =>{
-		const frontpageContainer = document.querySelector('.all-movies-container');
-		const movieContainer = document.createElement('div');
-		const movieImg = document.createElement('img');
-		const movieInfoContainer = document.createElement('div');
-		const movieTitle = document.createElement('h3');
-		const movieOverview = document.createElement('p');
-		const movieRelease = document.createElement('span');
-		
-		frontpageContainer.append(movieContainer);
-		movieContainer.append(movieImg);
 
-		movieContainer.classList.add('each-movie-container');
-		movieTitle.classList.add('frontpage-movie-title');
-
-		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-		
-		movieContainer.addEventListener('mouseover', ()=>{
-			movieContainer.append(movieInfoContainer);
-			movieContainer.classList.add('each-movie-container-hover');
-			movieInfoContainer.classList.add('movie-info-container');
-			movieInfoContainer.append(movieTitle, movieOverview, movieRelease);
-
-			movieTitle.textContent = movie.title;
-			movieOverview.textContent = `${movie.overview.slice(0, 210)} ...`;
-			movieRelease.textContent = `Release date: ${movie.release_date}`;
-			if (!movie.overview){
-				movieOverview.textContent = 'We dont know what happens in this movie...'
-			}
-		});
-		movieContainer.addEventListener('mouseleave', ()=>{
-			movieContainer.classList.remove('each-movie-container-hover');
-			movieContainer.removeChild(movieInfoContainer);
-
+async function renderFrontpageApi(movies) {
+	try{
+		const currentUserFavoriteGenre = await userFavoriteGenre();
+		console.log(currentUserFavoriteGenre);
+		const genreName = currentUserFavoriteGenre.charAt(0).toUpperCase() + currentUserFavoriteGenre.slice(1);
+		const userGenreId = genreID[genreName];
+		movies.forEach(movie =>{
+			movie.genre_ids.forEach(movieId =>{
+				if(movieId === userGenreId){
+					renderFavoriteMovies(movie, genreName)
+				} else {
+					
+				}
+			})
 		})
+
+	} catch(err){
+		console.log(err.message);
+	}
+}
+
+function renderFavoriteMovies(movie, genreName){
+	const frontpageHeaderInfo = document.querySelector('.frontpage-info');
+	const frontpageContainer = document.querySelector('.all-movies-container');
+	const movieContainer = document.createElement('div');
+	const movieImg = document.createElement('img');
+	const movieInfoContainer = document.createElement('div');
+	const movieTitle = document.createElement('h3');
+	const movieOverview = document.createElement('p');
+	const movieRelease = document.createElement('span');
+	
+	frontpageContainer.append(movieContainer);
+	movieContainer.append(movieImg);
+
+	frontpageHeaderInfo.textContent = `Checkout new releases of your favorite genre ${genreName}`;
+
+	movieContainer.classList.add('each-movie-container');
+	movieTitle.classList.add('frontpage-movie-title');
+
+	movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+	
+	movieContainer.addEventListener('mouseover', ()=>{
+		movieContainer.append(movieInfoContainer);
+		movieContainer.classList.add('each-movie-container-hover');
+		movieInfoContainer.classList.add('movie-info-container');
+		movieInfoContainer.append(movieTitle, movieOverview, movieRelease);
+
+		movieTitle.textContent = movie.title;
+		movieOverview.textContent = `${movie.overview.slice(0, 210)} ...`;
+		movieRelease.textContent = `Release date: ${movie.release_date}`;
+		if (!movie.overview){
+			movieOverview.textContent = 'We dont know what happens in this movie...'
+		}
+	});
+	movieContainer.addEventListener('mouseleave', ()=>{
+		movieContainer.classList.remove('each-movie-container-hover');
+		movieContainer.removeChild(movieInfoContainer);
+
 	})
 }
 
