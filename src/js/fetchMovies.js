@@ -1,4 +1,3 @@
-import apiKey from "./apiKey";
 import {filterMovies, sortMovies} from './filterMovies';
 import {saveFavoriteMoviesToDatabase} from './app';
 
@@ -9,23 +8,16 @@ let page = 1;
 
 const movieArray = [];
 
-const fetchMovieApiForMoviepage = async ()=>{
+const fetchMovies = async ()=>{
 	try {
 		const response = await fetch('http://localhost:2000/');
 		const data = await response.json();
 		movieArray.push(...data);
-		filterMovies(data);
-	} catch (err){
-		console.log(err.message);
-	}
-}
-
-const fetchMovieApiForFrontpage = async ()=>{
-	try {
-		const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${page}`);
-			const data = await response.json();
-			const movieData = data.results;
-			renderFrontpageApi(movieData);
+		if(pathName.includes('pages/movies')){
+			filterMovies(data);
+		} else if(pathName.includes('index')){
+			renderFrontpageApi(data);
+		}
 	} catch (err){
 		console.log(err.message);
 	}
@@ -78,19 +70,6 @@ function renderFrontpageApi(movies) {
 		})
 	})
 }
-
-// async function scrollMoviesEffect (){
-// 	try {
-// 		window.addEventListener('scroll', ()=>{
-// 			if(window.scrollY + window.innerHeight >= document.body.scrollHeight) {
-// 				page ++ ; 
-// 				fetchMovieApiForFrontpage(page)
-// 			}
-// 		})
-// 	} catch(err){
-// 		console.log(err.message);
-// 	}
-// }
 
 //SAVING MOVIES TO FAVORITEARRAY
 const favoriteMoviesArray = [];
@@ -165,4 +144,4 @@ function renderMoviepageApi(movies){
     })
 }
 
-export {fetchMovieApiForMoviepage, renderMoviepageApi, fetchMovieApiForFrontpage};
+export {fetchMovies, renderMoviepageApi};

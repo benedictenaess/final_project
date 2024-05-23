@@ -477,16 +477,10 @@ if(pathName.includes('favorites')){
 }
 
 //RENDER MOVIES --------------------------------------------------------------------------
-import {fetchMovieApiForFrontpage, fetchMovieApiForMoviepage} from './fetchMovies';
+import {fetchMovies} from './fetchMovies';
 
-if(pathName.includes('/dist/index.html')){
-	fetchMovieApiForFrontpage(1);
-	//HUSK Å IMPORT SCROLL EFFECT FUNCTION
-	// scrollMoviesEffect();
-}
-
-if(pathName.includes('pages/movies')){
-	fetchMovieApiForMoviepage();
+if(pathName.includes('pages/movies') || pathName.includes('/dist/index.html')){
+	fetchMovies();
 }
 
 export {saveFavoriteMoviesToDatabase}
