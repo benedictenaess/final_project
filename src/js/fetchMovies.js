@@ -34,6 +34,7 @@ if(pathName.includes('pages/movies.html')){
 }
 
 //REDNER FRONTPAGE API ----------------------------------------------------
+let currentClickedContainerFrontpage = null;
 
 async function renderFrontpageApi(movies) {
 	try{
@@ -45,9 +46,7 @@ async function renderFrontpageApi(movies) {
 			movie.genre_ids.forEach(movieId =>{
 				if(movieId === userGenreId){
 					renderFavoriteMovies(movie, genreName)
-				} else {
-					
-				}
+				} 
 			})
 		})
 
@@ -57,48 +56,77 @@ async function renderFrontpageApi(movies) {
 }
 
 function renderFavoriteMovies(movie, genreName){
+	
 	const frontpageHeaderInfo = document.querySelector('.frontpage-info');
 	const frontpageContainer = document.querySelector('.all-movies-container');
 	const movieContainer = document.createElement('div');
 	const movieImg = document.createElement('img');
-	const movieInfoContainer = document.createElement('div');
+	const infoContainer = document.createElement('div');
 	const movieTitle = document.createElement('h3');
-	const movieOverview = document.createElement('p');
-	const movieRelease = document.createElement('span');
-	
+	const movieOverview = document.createElement('div');
+	const movieRating = document.createElement('span');
+	const movieReleaseDate = document.createElement('span');
+	const addToFavorites = document.createElement('button');
+	const textArea = document.createElement('textarea');
+
+	addToFavorites.addEventListener('click',(e)=>{
+		e.preventDefault();
+		if(textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!'){
+			const movieReview = textArea.value.charAt(1).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
+			saveFavoriteMoviesToDatabase(movie, movieReview);
+		} else {
+			saveFavoriteMoviesToDatabase(movie);
+		}
+	})
+
 	frontpageContainer.append(movieContainer);
 	movieContainer.append(movieImg);
 
-	frontpageHeaderInfo.textContent = `Checkout new releases of your favorite genre ${genreName}`;
+	frontpageHeaderInfo.textContent = `Check out new releases of your favorite movie genre: ${genreName}`;
 
 	movieContainer.classList.add('each-movie-container');
 	movieTitle.classList.add('frontpage-movie-title');
-
 	movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-	
-	movieContainer.addEventListener('mouseover', ()=>{
-		movieContainer.append(movieInfoContainer);
-		movieContainer.classList.add('each-movie-container-hover');
-		movieInfoContainer.classList.add('movie-info-container');
-		movieInfoContainer.append(movieTitle, movieOverview, movieRelease);
 
-		movieTitle.textContent = movie.title;
-		movieOverview.textContent = `${movie.overview.slice(0, 210)} ...`;
-		movieRelease.textContent = `Release date: ${movie.release_date}`;
-		if (!movie.overview){
-			movieOverview.textContent = 'We dont know what happens in this movie...'
+	movieContainer.addEventListener('click',(e)=>{
+		if(e.target === textArea){
+			textArea.textContent = '';
+			return;
+		} 
+		if(currentClickedContainerFrontpage !== movieContainer) {
+
+			if(currentClickedContainerFrontpage !== null) {
+				const prevInfoContainer = currentClickedContainerFrontpage.querySelector('.info-container-frontpage');
+				currentClickedContainerFrontpage.removeChild(prevInfoContainer);
+				currentClickedContainerFrontpage.classList.remove('large-movie-container-frontpage');
+			}
+			
+			currentClickedContainerFrontpage = movieContainer;
+			
+			movieReleaseDate.textContent = movie.release_date;
+			movieTitle.textContent = movie.title;
+			movieOverview.textContent = movie.overview;
+			textArea.textContent = 'Write Your Review Here!';
+			addToFavorites.textContent = 'Add to Favorites';
+			movieRating.textContent = `Rating: ${movie.vote_average.toFixed(1)}`;
+
+			movieContainer.append(infoContainer);
+			infoContainer.append(movieTitle, movieRating, movieOverview, movieReleaseDate,textArea, addToFavorites);
+			
+			movieContainer.classList.add('large-movie-container-frontpage');
+			infoContainer.classList.add('info-container-frontpage');
+
+		} else {
+			const prevInfoContainer = currentClickedContainerFrontpage.querySelector('.info-container-frontpage');
+			currentClickedContainerFrontpage.removeChild(prevInfoContainer);
+			movieContainer.classList.remove('large-movie-container-frontpage');
+			currentClickedContainerFrontpage = null;
 		}
-	});
-	movieContainer.addEventListener('mouseleave', ()=>{
-		movieContainer.classList.remove('each-movie-container-hover');
-		movieContainer.removeChild(movieInfoContainer);
-
 	})
 }
 
 //SAVING MOVIES TO FAVORITEARRAY
 const favoriteMoviesArray = [];
-
 
 //RENDER MOVIESPAGE API ------------------------------------------------
 function renderMoviepageApi(movies){
@@ -112,8 +140,9 @@ function renderMoviepageApi(movies){
         const movieImg = document.createElement('img');
         const infoContainer = document.createElement('div');
         const movieTitle = document.createElement('h4');
-        const movieOverview = document.createElement('p');
+        const movieOverview = document.createElement('div');
 		const movieReleaseDate = document.createElement('span');
+		const movieRating = document.createElement('span');
         const addToFavorites = document.createElement('button');
 		const textArea = document.createElement('textarea');
 
@@ -148,14 +177,15 @@ function renderMoviepageApi(movies){
                 
                 currentClickedContainer = movieContainer;
                 movieContainer.append(infoContainer);
-                infoContainer.append(movieTitle, movieOverview, movieReleaseDate,textArea, addToFavorites);
+                infoContainer.append(movieTitle, movieRating, movieOverview, movieReleaseDate,textArea, addToFavorites);
                 
 				movieReleaseDate.textContent = movie.release_date;
                 movieTitle.textContent = movie.title;
                 movieOverview.textContent = movie.overview;
 				textArea.textContent = 'Write Your Review Here!';
                 addToFavorites.textContent = 'Add to Favorites';
-                
+                movieRating.textContent = `Rating: ${movie.vote_average.toFixed(1)}`;
+
                 movieContainer.classList.add('large-movie-container');
                 infoContainer.classList.add('moviepage-info-container');
 

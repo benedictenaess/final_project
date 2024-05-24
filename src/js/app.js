@@ -2,6 +2,7 @@ import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
 import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
+import {fetchMovies} from './fetchMovies';
 
 const pathName = window.location.pathname;
 
@@ -362,6 +363,9 @@ onAuthStateChanged(authService, (user)=>{
 		signInDisplay();
 		pageNavigation();
 		renderUsersOnUserProfile();
+		if (pathName.includes('pages/movies') || pathName.includes('/dist/index.html')) {
+			fetchMovies();
+		}
 	} else{
 		console.log('user is logged out');
 		signOutDisplaySignOutButtonHidden();
@@ -381,6 +385,7 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
 			if(movieReview){
 				const newMovie = {
 					title: movie.original_title,
+					rating: movie.vote_averag.toFixed(1),
 					releaseDate: movie.release_date,
 					img: movie.poster_path,
 					overview: movie.overview,
@@ -392,6 +397,7 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
 			} else {
 				const newMovie = {
 					title: movie.original_title,
+					rating: movie.vote_average.toFixed(1),
 					releaseDate: movie.release_date,
 					img: movie.poster_path,
 					overview: movie.overview
@@ -444,12 +450,14 @@ function rednerFavoriteMovies(movie){
 		const infoContainer = document.createElement('div');
 		const movieTitle = document.createElement('h2');
 		const movieReleaseDate = document.createElement('p');
+		const movieRating = document.createElement('p');
 		const movieReview = document.createElement('span');
 		const movieOverview = document.createElement('p');
 		const deleteFavoriteMovie = document.createElement('button');
 
 		movieTitle.textContent = movie.title;
 		movieReleaseDate.textContent = `Release date: ${movie.releaseDate}`;
+		movieRating.textContent = `Rating: ${movie.rating}`;
 		movieOverview.textContent = movie.overview;
 		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.img}`;
 		deleteFavoriteMovie.textContent = 'Remove from Favorites';
@@ -460,7 +468,7 @@ function rednerFavoriteMovies(movie){
 		
 		favoriteMoviesContainer.append(movieContainer);
 		movieContainer.append(movieImg, infoContainer);
-		infoContainer.append(movieTitle, movieReleaseDate, movieOverview, movieReview, deleteFavoriteMovie);
+		infoContainer.append(movieTitle, movieRating, movieReleaseDate, movieOverview, movieReview, deleteFavoriteMovie);
 
 		deleteFavoriteMovie.addEventListener('click', (e)=>{
 			const removeContainer = e.target.parentElement.parentElement;
@@ -496,12 +504,12 @@ if(pathName.includes('favorites')){
 	displayFavorites();
 }
 
-//RENDER MOVIES --------------------------------------------------------------------------
-import {fetchMovies} from './fetchMovies';
+// //RENDER MOVIES --------------------------------------------------------------------------
+// import {fetchMovies} from './fetchMovies';
 
-if (pathName.includes('pages/movies') || pathName.includes('/dist/index.html')) {
-    fetchMovies();
-}
+// if (pathName.includes('pages/movies') || pathName.includes('/dist/index.html')) {
+//     fetchMovies();
+// }
 
 
 export {saveFavoriteMoviesToDatabase, userFavoriteGenre}
