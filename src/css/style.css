@@ -612,27 +612,45 @@ input,
 	padding: 5rem 2rem;
 }
 
+.favorites-page-main-info {
+	margin-top: 1rem;
+}
+
 .favorite-movies-container {
 	display: flex;
-	flex-direction: column;
+	flex-flow: row wrap;
 	margin-top: 5rem;
 }
 
 .each-favorite-movie-container {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 50%;
+	min-width: 550px;
 	gap: 1rem;
-	padding: 2rem;
+	padding: 1.5rem;
 }
 
-.each-favorite-movie-container img {
-	max-width: 30%;
+.each-favorite-movie-container h2 {
+	font-size: var(--font-size-large);
+	color: var(--color-accent-1);
+}
+
+.favorite-img-info-container {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}
+
+.favorite-img-info-container img {
+	height: 450px;
 }
 
 .favorite-movie-info {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
+	justify-content: space-between;
 	gap: 1.5rem;
 	line-height: var(--line-height);
 }
