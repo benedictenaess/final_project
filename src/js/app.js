@@ -454,6 +454,8 @@ function rednerFavoriteMovies(movie){
 		const movieReview = document.createElement('span');
 		const movieOverview = document.createElement('p');
 		const deleteFavoriteMovie = document.createElement('button');
+		const imgAndInfoContainer = document.createElement('div');
+
 
 		movieTitle.textContent = movie.title;
 		movieReleaseDate.textContent = `Release date: ${movie.releaseDate}`;
@@ -464,11 +466,13 @@ function rednerFavoriteMovies(movie){
 		movieReview.textContent = movie.review ? `User review: ${movie.review}` : '';
 
 		movieContainer.classList.add('each-favorite-movie-container');
+		imgAndInfoContainer.classList.add('favorite-img-info-container')
 		infoContainer.classList.add('favorite-movie-info');
 		
 		favoriteMoviesContainer.append(movieContainer);
-		movieContainer.append(movieImg, infoContainer);
-		infoContainer.append(movieTitle, movieRating, movieReleaseDate, movieOverview, movieReview, deleteFavoriteMovie);
+		movieContainer.append(movieTitle, imgAndInfoContainer);
+		imgAndInfoContainer.append(movieImg, infoContainer);
+		infoContainer.append(movieRating, movieReleaseDate, movieOverview, movieReview, deleteFavoriteMovie);
 
 		deleteFavoriteMovie.addEventListener('click', (e)=>{
 			const removeContainer = e.target.parentElement.parentElement;

@@ -45,7 +45,7 @@ async function renderFrontpageApi(movies) {
 		movies.forEach(movie =>{
 			movie.genre_ids.forEach(movieId =>{
 				if(movieId === userGenreId){
-					renderFavoriteMovies(movie, genreName)
+					displayFrontpageMovies(movie, genreName)
 				} 
 			})
 		})
@@ -55,7 +55,7 @@ async function renderFrontpageApi(movies) {
 	}
 }
 
-function renderFavoriteMovies(movie, genreName){
+function displayFrontpageMovies(movie, genreName){
 	
 	const frontpageHeaderInfo = document.querySelector('.frontpage-info');
 	const frontpageContainer = document.querySelector('.all-movies-container');
