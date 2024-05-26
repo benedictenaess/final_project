@@ -550,13 +550,13 @@ input,
 	text-align: center;
 	justify-content: center;
 	font-size: var(--font-size-medium);
-	padding: 1.5rem;
-	background-color: var(--color-accent-1);
-	min-width: 200px;
-	min-height: 100px;
-	border: 1rem solid var(--color-accent-1);
+	padding: 1rem;
+	width: auto;
+	height: auto;
+	color: var(--color-secondary);
+	background-color: var(--color-primary);
 	border-radius: var(--border-radius);
-	box-shadow: 10px 10px 10px 20px var(--color-accent-3);
+	box-shadow: 5px 5px 5px black;
 	transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 	animation: slidein 3s cubic-bezier(0.19, 1, 0.22, 1), fadein 1s forwards;
 	opacity: 0;
@@ -577,6 +577,72 @@ input,
 	to {
 		opacity: 1;
 	}
+}
+
+/* FAVORITES PAGE-------------------------------------------------------------------------- */
+
+.favorites-page-main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 5rem 2rem;
+}
+
+.favorites-page-main-info {
+	margin-top: 1rem;
+}
+
+.favorite-movies-container {
+	display: flex;
+	flex-flow: column;
+	margin-top: 5rem;
+}
+
+.each-favorite-movie-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	gap: 1rem;
+	padding: 1.5rem;
+	border-bottom: 1px solid var(--color-primary);
+}
+
+.each-favorite-movie-container h2 {
+	font-size: var(--font-size-large);
+	color: var(--color-accent-1);
+}
+
+.favorite-img-info-container {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}
+
+.favorite-img-info-container img {
+	height: 400px;
+}
+
+.favorite-movie-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 1.5rem;
+	line-height: var(--line-height);
+}
+
+.favorite-movie-info h2 {
+	font-weight: 400;
+}
+
+.favorite-movie-info button {
+	display: flex;
+	align-self: flex-start;
+	color: var(--color-accent-1);
+	font-size: var(--font-size-base);
+	border: 1px solid var(--color-accent-1);
+	border-radius: var(--border-radius);
+	padding: 0.3rem;
 }
 
 /* USER PROFILE PAGE ------------------------------------------------------------------------ */
@@ -611,71 +677,8 @@ input,
 	background-color: var(--color-accent-3);
 }
 
-/* FAVORITES PAGE-------------------------------------------------------------------------- */
 
-.favorites-page-main {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 5rem 2rem;
-}
-
-.favorites-page-main-info {
-	margin-top: 1rem;
-}
-
-.favorite-movies-container {
-	display: flex;
-	flex-flow: row wrap;
-	margin-top: 5rem;
-}
-
-.each-favorite-movie-container {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	width: 50%;
-	min-width: 550px;
-	gap: 1rem;
-	padding: 1.5rem;
-}
-
-.each-favorite-movie-container h2 {
-	font-size: var(--font-size-large);
-	color: var(--color-accent-1);
-}
-
-.favorite-img-info-container {
-	display: flex;
-	flex-direction: row;
-	gap: 1rem;
-}
-
-.favorite-img-info-container img {
-	height: 450px;
-}
-
-.favorite-movie-info {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	gap: 1.5rem;
-	line-height: var(--line-height);
-}
-
-.favorite-movie-info h2 {
-	font-weight: 400;
-}
-
-.favorite-movie-info button {
-	display: flex;
-	align-self: flex-start;
-	color: var(--color-accent-1);
-	font-size: var(--font-size-base);
-	border: 1px solid var(--color-accent-1);
-	border-radius: var(--border-radius);
-	padding: 0.3rem;
-}
+/* RESPONSIVENESS ------------------------------------------------------------------ */
 
 @media (max-width: 900px) {
 	.menu-bar {
@@ -684,6 +687,7 @@ input,
 		height: auto;
 		margin-top: 1rem;
 		gap: 0.5rem;
+		padding: 0rem 2rem;
 	}
 	.header-page-nav ul {
 		flex-direction: column;
@@ -697,5 +701,117 @@ input,
 	}
 	.sign-out-button {
 		display: none;
+	}
+}
+
+@media (max-width: 700px) {
+	/* SIGN IN/UP FORM ------------------------------------------------------------------------ */
+	.all-forms-container {
+		display: flex;
+		flex-direction: column;
+		width: 350px;
+	}
+	.signup-form_visibility {
+		height: 580px;
+	}
+	.sign-in-form,
+	.sign-up-form {
+		padding: 2.5rem;
+	}
+	.sign-in-form div div,
+	.sign-up-form div div,
+	.sign-up-form div select {
+		flex-direction: column;
+		align-items: center;
+	}
+	input,
+	#genre {
+		width: 100%;
+	}
+
+	/* MAINPAGE ------------------------------------------------------------------------ */
+	.main-content {
+		display: none;
+		width: 100%;
+		height: 100vh;
+		font-size: var(--font-size-large);
+		margin-top: 2rem;
+	}
+	.render-username {
+		text-align: center;
+		padding: 1.5rem;
+		width: 400px;
+		height: 150px;
+		font-size: var(--font-size-small);
+	}
+	.frontpage-api-container h1{
+		padding: 0rem 2rem;
+	}
+	.frontpage-api-container p {
+		padding: 0rem 2rem;
+		font-size: 20px;
+	}
+	.all-movies-container {
+		margin-top: 3rem;
+		gap: 1rem;
+		padding: 0rem;
+		overflow-y: scroll;
+	}
+	.each-movie-container {
+		height: 450px;
+	}
+	.large-movie-container-frontpage {
+		flex-direction: column;
+		width: 80%;
+		height: 80%;
+		overflow-y: auto;
+	}
+
+	/* MOVIESPAGE --------------------------------------------------------------------------------------------- */
+	.find-movie-section {
+		margin-top: 2rem;
+		padding: 0rem 2rem;
+	}
+	.find-movie-info-container {
+		width: 100%;
+	}
+	.moviespage-movies-section {
+		gap: 0rem;
+		justify-content: center;
+	}
+	.moviespage-movies-container img{
+		height: 300px;
+	}
+	.large-movie-container {
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		width: 80%;
+		height: 80%;
+		overflow-y: auto;
+		padding: 1rem;
+	}
+
+	/* FAVORITES PAGE-------------------------------------------------------------------------- */
+	.favorites-page-main {
+		align-items: flex-start;
+		padding: 2rem;
+	}
+	.favorite-movies-container {
+		flex-flow: column;
+		margin-top: 3rem;
+	}
+	.each-favorite-movie-container {
+		padding: 2rem 0rem;
+	}
+	.favorite-img-info-container img {
+		height: 250px;
+	}
+	/* USER PROFILE PAGE ------------------------------------------------------------------------ */
+
+	.main-section-userprofile {
+		align-items: flex-start;
+		margin-top: 2rem;
+		padding-left: 2rem;
 	}
 }

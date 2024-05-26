@@ -14,16 +14,28 @@
 	--color-accent-3: #000a1d;
 	--color-accent-4: rgb(0, 34, 96);
 
-	/* --color-primary: #4B2E2B; */
-	/* --color-secondary: #F6FBF5; */
-
-	/* --color-accent-1: #AE5227; */
-	/* --color-accent-3: #F6FBF5;
-	--color-accent-4: #8f421f; */
-
 	--border-radius: 0.6rem;
 	--line-height: 1.5rem;
-	/* --spacing-small: 0.3rem;
-	--spacing-medium: 1rem;
-	--spacing-large: 2rem; */
+}
+
+@media (max-width: 700px) {
+	:root {
+		--font-size-base: 12px;
+		--font-size-small: 16px;
+		--font-size-medium: 1.125em;
+		--font-size-medium-large: 1.25em;
+		--font-size-large: 1.5em;
+		--font-size-extra-large: 1.75em;
+	
+		--color-primary: #FCEACB;
+		--color-secondary: #001233;
+		
+		--color-accent-1: #FF595A;
+		--color-accent-2: #ff8686;
+		--color-accent-3: #000a1d;
+		--color-accent-4: rgb(0, 34, 96);
+	
+		--border-radius: 0.6rem;
+		--line-height: 1.5rem;
+	}
 }
