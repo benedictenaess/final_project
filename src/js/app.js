@@ -3,13 +3,12 @@ import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
 import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
 import {fetchMovies} from './fetchMovies';
+import { validateSignInForm } from "./signInValidation";
+import {validateSignUpForm} from './signUpValidation';
 
 const pathName = window.location.pathname;
 
-
 //VALIDATION -----------------------------------------------------------------------------------
-import { validateSignInForm } from "./signInValidation";
-import {validateSignUpForm} from './signUpValidation';
 
 const signInEmail = document.querySelector('.signin-email');
 const signInPassword = document.querySelector('.signin-password');
@@ -23,18 +22,58 @@ const signUpEmailErrorSpan = document.querySelector('.email-signup-error-span');
 const signUpPasswordErrorSpan = document.querySelector('.password-signup-error-span');
 
 
-//INITIALIZE FIREBASE AUTH/FIRESTORE ------------------------
+//INITIALIZE FIREBASE AUTH/FIRESTORE -------------------------------------
 initializeApp(firebaseConfig);
 const authService = getAuth();
 const database = getFirestore();
 const usersCollection = collection(database, 'users');
 const favoritesCollection = collection(database, 'favorites');
 
-//ACTIVE NAV
+//HAMBURGER MENU -----------------------------------------------------------------------------
+const menuToggleButton = document.querySelector('.header-logo');
 const homeNavButton = document.querySelector('.home-nav');
 const moviesNavButton = document.querySelector('.movies-nav');
 const favoritesNavButton = document.querySelector('.favorites-nav');
 const profileNavButton = document.querySelector('.profile-nav');
+const signOutButton = document.querySelector('.sign-out-button');
+
+let isMenuVisible = false; // Track the menu visibility state
+
+const setMenuVisibility = () => {
+    if (window.innerWidth > 900) {
+        homeNavButton.style.display = 'block';
+        moviesNavButton.style.display = 'block';
+        favoritesNavButton.style.display = 'block';
+        profileNavButton.style.display = 'block';
+        signOutButton.style.display = 'block';
+    } else {
+        if (isMenuVisible) {
+            homeNavButton.style.display = 'block';
+            moviesNavButton.style.display = 'block';
+            favoritesNavButton.style.display = 'block';
+            profileNavButton.style.display = 'block';
+            signOutButton.style.display = 'block';
+        } else {
+            homeNavButton.style.display = 'none';
+            moviesNavButton.style.display = 'none';
+            favoritesNavButton.style.display = 'none';
+            profileNavButton.style.display = 'none';
+            signOutButton.style.display = 'none';
+        }
+    }
+};
+
+const menuBarToggle = () => {
+    if (window.innerWidth <= 900) {
+        isMenuVisible = !isMenuVisible;
+        setMenuVisibility();
+    }
+};
+
+window.addEventListener('resize', setMenuVisibility);
+window.addEventListener('load', setMenuVisibility);
+
+//ACTIVE NAV -----------------------------------------------------------------------
 
 function pageNavigation(){
 	homeNavButton.addEventListener('click',(e)=>{
@@ -107,7 +146,6 @@ const signUpForm = document.querySelector('.sign-up-form');
 
 const mainContentSection = document.querySelector('.main-content');
 const formSection = document.querySelector('.form-section');
-const signOutButton = document.querySelector('.sign-out-button');
 
 const signUpUser = async ()=>{
 	const firstnameValue = signUpFirstname.value.charAt(0).toUpperCase() + signUpFirstname.value.slice(1).toLowerCase().trim();
@@ -366,6 +404,7 @@ onAuthStateChanged(authService, (user)=>{
 		if (pathName.includes('pages/movies') || pathName.includes('/dist/index.html')) {
 			fetchMovies();
 		}
+		menuToggleButton.addEventListener('click', menuBarToggle);
 	} else{
 		console.log('user is logged out');
 		signOutDisplaySignOutButtonHidden();
@@ -507,13 +546,5 @@ async function deleteFavoriteMovieFromDatabase(movie){
 if(pathName.includes('favorites')){
 	displayFavorites();
 }
-
-// //RENDER MOVIES --------------------------------------------------------------------------
-// import {fetchMovies} from './fetchMovies';
-
-// if (pathName.includes('pages/movies') || pathName.includes('/dist/index.html')) {
-//     fetchMovies();
-// }
-
 
 export {saveFavoriteMoviesToDatabase, userFavoriteGenre}
