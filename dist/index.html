@@ -16,7 +16,6 @@
 			<nav class="header-page-nav">
 				<ul>
 					<li><button class="nav-button-active home-nav">Home</button></li>
-					<li><button class="movies-nav">Movies</button></li>
 					<li><button class="favorites-nav">Favorites</button></li>
 					<li><button class="profile-nav">Profile</button></li>
 				</ul>
@@ -112,6 +111,42 @@
 			<p class="frontpage-info"></p>
 			<div class="all-movies-container"></div>
 		</div>
+		<div class="divider">
+			<div class="divider-line"></div>
+		</div>
+	</section>
+
+	<section class="find-movie-section">
+		<div class="find-movie-info-container">
+			<h2>What are you looking for?</h2>
+			<p>Find the perfect movie to watch! Filter movies by genre and sort them to find what you are looking for</p>
+		</div>
+		<div class="filters-container">
+			<div class="all-filter-buttons">
+				<button class="filter-button">All</button>
+				<button class="filter-button">Action</button>
+				<button class="filter-button">Adventure</button>
+				<button class="filter-button">Comedy</button>
+				<button class="filter-button">Crime</button>
+				<button class="filter-button">Drama</button>
+				<button class="filter-button">Horror</button>
+				<button class="filter-button">Romance</button>
+				<button class="filter-button">Thriller</button>
+			</div>
+		</div>
+		<div class="sort-container">
+			<span>Sort by:</span>
+			<select name="categories" id="categories">
+				<option value="default" disabled selected>--</option>
+				<option value="title">Title</option>
+				<option value="highest-rating">Highest Rating</option>
+				<option value="lowest-rating">Lowest Rating</option>
+				<option value="newest-release">Newest Release</option>
+			</select>
+		</div>
+		
+		<div class="add-to-favorites"></div>
+		<div class="moviespage-movies-section"></div>
 	</section>
 	<script src="bundle.js"></script>
 </body>
