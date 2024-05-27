@@ -414,7 +414,7 @@ input,
 	display: flex;
     flex-direction: row;
     width: 70%;
-    height: 50%;
+    height: 60%;
 	min-height: 350px;
     background-color: var(--color-accent-1);
     border-radius: var(--border-radius);
@@ -440,11 +440,10 @@ input,
 }
 
 .large-movie-img {
-	height: 350px;
-	margin: 1rem;
+	height: 80%;
+	margin: 2rem;
 	border-radius: var(--border-radius);
 	box-shadow: 3px 3px 5px var(--color-accent-3);
-	transition: box-shadow 0.2s ease;
 }
 
 .large-info-container textarea {
@@ -530,6 +529,7 @@ input,
 .favorite-movies-container {
 	display: flex;
 	flex-flow: column;
+	width: 80%;
 	margin-top: 5rem;
 }
 
@@ -537,10 +537,9 @@ input,
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	width: 100%;
 	gap: 1rem;
 	padding: 1.5rem;
-	border-bottom: 1px solid var(--color-primary);
+	border-top: 1px solid var(--color-primary);
 }
 
 .each-favorite-movie-container h2 {
@@ -637,9 +636,7 @@ input,
 	.sign-out-button {
 		display: none;
 	}
-}
 
-@media (max-width: 700px) {
 	/* SIGN IN/UP FORM ------------------------------------------------------------------------ */
 	.all-forms-container {
 		display: flex;
@@ -702,12 +699,12 @@ input,
 		overflow-y: auto;
 	}
 	.divider {
-		margin-top: 2rem;
+		margin-top: 6rem;
 	}
 
-	/* ALL MOVIES --------------------------------------------------------------------------------------------- */
+	/* ALL MOVIES MAINPAGE ----------------------------------------------------------------------------- */
 	.find-movie-section {
-		margin-top: 2rem;
+		margin-top: -7rem;
 		padding: 0rem 2rem;
 	}
 	.find-movie-info-container {
@@ -726,6 +723,10 @@ input,
 		overflow-y: auto;
 		padding: 1rem;
 	}
+	.large-movie-img {
+		height: 50%;
+		margin: 0rem;
+	}
 
 	/* FAVORITES PAGE-------------------------------------------------------------------------- */
 	.favorites-page-main {
@@ -735,6 +736,7 @@ input,
 	.favorite-movies-container {
 		flex-flow: column;
 		margin-top: 3rem;
+		width: 100%;
 	}
 	.each-favorite-movie-container {
 		padding: 2rem 0rem;
