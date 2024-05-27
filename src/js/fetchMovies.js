@@ -11,15 +11,8 @@ const fetchMovies = async ()=>{
 		const response = await fetch('http://localhost:2000/');
 		const data = await response.json();
 		movieArray.push(...data);
-		if(pathName.includes('pages/movies')){
-			filterMovies(data);
-		} else if(pathName.includes('index')){
-			try {
-				await renderFrontpageApi(data);
-			} catch(err){
-				console.log(err.message);
-			}
-		}
+		filterMovies(data);
+		await renderFirstMovieArray(data);
 	} catch (err){
 		console.log(err.message);
 	}
@@ -27,16 +20,17 @@ const fetchMovies = async ()=>{
 
 //SORTING MOVIES ----------------------------------------------------------
 
-if(pathName.includes('pages/movies.html')){
+if(pathName.includes('index.html')){
 	selectCategory.addEventListener('change', ()=>{
 		sortMovies(movieArray)
 	})
 }
 
-//REDNER FRONTPAGE API ----------------------------------------------------
+//REDNER FIRST MOVIE ARRAY ON FRONTPAGE ----------------------------------------------------
 let currentClickedContainerFrontpage = null;
+let currentClickedContainer = null;
 
-async function renderFrontpageApi(movies) {
+async function renderFirstMovieArray(movies) {
 	try{
 		const currentUserFavoriteGenre = await userFavoriteGenre();
 		const genreName = currentUserFavoriteGenre.charAt(0).toUpperCase() + currentUserFavoriteGenre.slice(1);
@@ -124,12 +118,10 @@ function displayFrontpageMovies(movie, genreName){
 	})
 }
 
-//RENDER MOVIESPAGE API ------------------------------------------------
-function renderMoviepageApi(movies){
+//RENDER ALL MOVIES ON FRONTPAGE ------------------------------------------------
+function renderAllMovies(movies){
     const moviespageContainer = document.querySelector('.moviespage-movies-section');
     moviespageContainer.textContent = '';
-    
-    let currentClickedContainer = null;
 
     movies.forEach(movie =>{
         const movieContainer = document.createElement('div');
@@ -152,7 +144,8 @@ function renderMoviepageApi(movies){
 			}
 		})
 
-        moviespageContainer.append(movieContainer);
+		const largeDisplayContainer = document.createElement('div');
+        moviespageContainer.append(movieContainer, largeDisplayContainer);
         movieContainer.append(movieImg);
 
         movieContainer.classList.add('moviespage-movies-container');
@@ -163,6 +156,7 @@ function renderMoviepageApi(movies){
 				textArea.textContent = '';
 				return;
 			} 
+
             if(currentClickedContainer !== movieContainer) {
 
                 if(currentClickedContainer !== null) {
@@ -195,4 +189,4 @@ function renderMoviepageApi(movies){
     })
 }
 
-export {fetchMovies, renderMoviepageApi};
+export {fetchMovies, renderAllMovies};

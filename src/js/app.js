@@ -30,7 +30,6 @@ const favoritesCollection = collection(database, 'favorites');
 //HAMBURGER MENU -----------------------------------------------------------------------------
 const menuToggleButton = document.querySelector('.header-logo');
 const homeNavButton = document.querySelector('.home-nav');
-const moviesNavButton = document.querySelector('.movies-nav');
 const favoritesNavButton = document.querySelector('.favorites-nav');
 const profileNavButton = document.querySelector('.profile-nav');
 const signOutButton = document.querySelector('.sign-out-button');
@@ -40,20 +39,17 @@ let isMenuVisible = false;
 const setMenuVisibility = () => {
     if (window.innerWidth > 900) {
         homeNavButton.style.display = 'block';
-        moviesNavButton.style.display = 'block';
         favoritesNavButton.style.display = 'block';
         profileNavButton.style.display = 'block';
         signOutButton.style.display = 'block';
     } else {
         if (isMenuVisible) {
             homeNavButton.style.display = 'block';
-            moviesNavButton.style.display = 'block';
             favoritesNavButton.style.display = 'block';
             profileNavButton.style.display = 'block';
             signOutButton.style.display = 'block';
         } else {
             homeNavButton.style.display = 'none';
-            moviesNavButton.style.display = 'none';
             favoritesNavButton.style.display = 'none';
             profileNavButton.style.display = 'none';
             signOutButton.style.display = 'none';
@@ -77,11 +73,6 @@ function pageNavigation(){
 		e.preventDefault();
 		window.location.pathname = '/dist/index.html';
 		activeButton(homeNavButton);
-	});
-	
-	moviesNavButton.addEventListener('click',(e)=>{
-		e.preventDefault();
-		window.location.pathname = '/src/pages/movies.html';
 	});
 	
 	favoritesNavButton.addEventListener('click',(e)=>{
@@ -322,11 +313,13 @@ const deleteAccount = async ()=>{
 }
 
 //CHANGING DISPLAY SINGIN/OUT ------------------------------------------
+const movieSection = document.querySelector('.find-movie-section');
 function signInDisplay(){
 	if(window.location.pathname === '/dist/index.html'){
 		signInForm.reset();
 		signUpForm.reset();
 		mainContentSection.style.display = 'block';
+		movieSection.style.display = 'block';
 		formSection.style.display = 'none';
 	}
 }
@@ -334,6 +327,7 @@ function signInDisplay(){
 function signOutDisplay(){
 	if(window.location.pathname === '/dist/index.html'){
 		mainContentSection.style.display = 'none';
+		movieSection.style.display = 'none';
 		formSection.style.display = 'block';
 		signInFormVisibility.style.display = 'block';
 		signUpFormVisibility.style.display = 'none';

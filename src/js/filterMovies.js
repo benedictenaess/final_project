@@ -1,4 +1,4 @@
-import {renderMoviepageApi} from './fetchMovies';
+import {renderAllMovies} from './fetchMovies';
 
 const genreID = {};
 const fetchGenreId = async ()=>{
@@ -19,7 +19,7 @@ const filterButtons = document.querySelectorAll('.filter-button');
 const selectCategory = document.querySelector('#categories');
 
 const filterMovies=(movies)=>{
-	renderMoviepageApi(movies);
+	renderAllMovies(movies);
 	filterButtons.forEach(button =>{
 		button.addEventListener('click', async (e)=>{
 			try {
@@ -28,11 +28,11 @@ const filterMovies=(movies)=>{
 				const buttonTargetName = button.textContent;
 				if(buttonTargetName){
 					if(buttonTargetName === 'All') {
-						renderMoviepageApi(movies);
+						renderAllMovies(movies);
 					} else {
 						const targetID = genreID[buttonTargetName];
 						const renderMovies = movies.filter(movie => movie.genre_ids.includes(targetID));
-						renderMoviepageApi(renderMovies);
+						renderAllMovies(renderMovies);
 					}
 				}
 			} catch (err){
@@ -62,7 +62,7 @@ function sortMovies(movies){
 			break;
 	}
 	movies.sort(comparator);
-	renderMoviepageApi(movies);
+	renderAllMovies(movies);
 }
 
 export {filterMovies, sortMovies, genreID};
