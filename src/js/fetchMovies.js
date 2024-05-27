@@ -50,15 +50,15 @@ async function renderFirstMovieArray(movies) {
 
 function displayFrontpageMovies(movie, genreName){
 	
+	const favoriteGenreContainer = document.querySelector('.frontpage-favorite-genre-container');
 	const frontpageHeaderInfo = document.querySelector('.frontpage-info');
-	const frontpageContainer = document.querySelector('.all-movies-container');
 	const movieContainer = document.createElement('div');
 	const movieImg = document.createElement('img');
-	const infoContainer = document.createElement('div');
-	const movieTitle = document.createElement('h3');
-	const movieOverview = document.createElement('div');
-	const movieRating = document.createElement('span');
-	const movieReleaseDate = document.createElement('span');
+	// const infoContainer = document.createElement('div');
+	// const movieTitle = document.createElement('h3');
+	// const movieOverview = document.createElement('div');
+	// const movieRating = document.createElement('span');
+	// const movieReleaseDate = document.createElement('span');
 	const addToFavorites = document.createElement('button');
 	const textArea = document.createElement('textarea');
 
@@ -71,122 +71,102 @@ function displayFrontpageMovies(movie, genreName){
 			saveFavoriteMoviesToDatabase(movie);
 		}
 	})
-
-	frontpageContainer.append(movieContainer);
-	movieContainer.append(movieImg);
-
 	frontpageHeaderInfo.textContent = `Check out new releases of your favorite movie genre: ${genreName}`;
 
-	movieContainer.classList.add('each-movie-container');
-	movieTitle.classList.add('frontpage-movie-title');
+	const largeDisplayContainer = document.createElement('div');
+	favoriteGenreContainer.append(movieContainer, largeDisplayContainer);
+	movieContainer.append(movieImg);
+	movieImg.classList.add('frontpage-favorite-genre-img')
+
 	movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 
-	movieContainer.addEventListener('click',(e)=>{
-		if(e.target === textArea){
-			textArea.textContent = '';
-			return;
-		} 
-		if(currentClickedContainerFrontpage !== movieContainer) {
-
-			if(currentClickedContainerFrontpage !== null) {
-				const prevInfoContainer = currentClickedContainerFrontpage.querySelector('.info-container-frontpage');
-				currentClickedContainerFrontpage.removeChild(prevInfoContainer);
-				currentClickedContainerFrontpage.classList.remove('large-movie-container-frontpage');
-			}
-			
-			currentClickedContainerFrontpage = movieContainer;
-			
-			movieReleaseDate.textContent = movie.release_date;
-			movieTitle.textContent = movie.title;
-			movieOverview.textContent = movie.overview;
-			textArea.textContent = 'Write Your Review Here!';
-			addToFavorites.textContent = 'Add to Favorites';
-			movieRating.textContent = `Rating: ${movie.vote_average.toFixed(1)}`;
-
-			movieContainer.append(infoContainer);
-			infoContainer.append(movieTitle, movieRating, movieOverview, movieReleaseDate,textArea, addToFavorites);
-			
-			movieContainer.classList.add('large-movie-container-frontpage');
-			infoContainer.classList.add('info-container-frontpage');
-
-		} else {
-			const prevInfoContainer = currentClickedContainerFrontpage.querySelector('.info-container-frontpage');
-			currentClickedContainerFrontpage.removeChild(prevInfoContainer);
-			movieContainer.classList.remove('large-movie-container-frontpage');
-			currentClickedContainerFrontpage = null;
-		}
+	movieContainer.addEventListener('click', ()=>{
+		displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea, addToFavorites)
 	})
+	largeDisplayContainer.addEventListener('click', (e) => {
+		removeLargeContainer(e, largeDisplayContainer, textArea, addToFavorites)
+	});
 }
 
 //RENDER ALL MOVIES ON FRONTPAGE ------------------------------------------------
-function renderAllMovies(movies){
-    const moviespageContainer = document.querySelector('.moviespage-movies-section');
-    moviespageContainer.textContent = '';
+function renderAllMovies(movies) {
+    const allMoviesSection = document.querySelector('.frontpage-movies-section');
+    allMoviesSection.textContent = '';
 
-    movies.forEach(movie =>{
+    movies.forEach(movie => {
         const movieContainer = document.createElement('div');
         const movieImg = document.createElement('img');
-        const infoContainer = document.createElement('div');
-        const movieTitle = document.createElement('h4');
-        const movieOverview = document.createElement('div');
-		const movieReleaseDate = document.createElement('span');
-		const movieRating = document.createElement('span');
+        const textArea = document.createElement('textarea');
         const addToFavorites = document.createElement('button');
-		const textArea = document.createElement('textarea');
 
-		addToFavorites.addEventListener('click',(e)=>{
-			e.preventDefault();
-			if(textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!'){
-				const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
-				saveFavoriteMoviesToDatabase(movie, movieReview);
-			} else {
-				saveFavoriteMoviesToDatabase(movie);
-			}
-		})
+        addToFavorites.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!') {
+                const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
+                saveFavoriteMoviesToDatabase(movie, movieReview);
+            } else {
+                saveFavoriteMoviesToDatabase(movie);
+            }
+        });
 
-		const largeDisplayContainer = document.createElement('div');
-        moviespageContainer.append(movieContainer, largeDisplayContainer);
+        const largeDisplayContainer = document.createElement('div');
+        allMoviesSection.append(movieContainer, largeDisplayContainer);
         movieContainer.append(movieImg);
 
-        movieContainer.classList.add('moviespage-movies-container');
+        movieContainer.classList.add('frontpage-all-movies-container');
         movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-        
-        movieContainer.addEventListener('click',(e)=>{
-			if(e.target === textArea){
-				textArea.textContent = '';
-				return;
-			} 
+		
+        movieContainer.addEventListener('click', () => {
+			displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea, addToFavorites)
+        });
 
-            if(currentClickedContainer !== movieContainer) {
+        largeDisplayContainer.addEventListener('click', (e) => {
+            removeLargeContainer(e, largeDisplayContainer, textArea, addToFavorites)
+        });
+    });
+}
 
-                if(currentClickedContainer !== null) {
-                    const prevInfoContainer = currentClickedContainer.querySelector('.moviepage-info-container');
-                    currentClickedContainer.removeChild(prevInfoContainer);
-                    currentClickedContainer.classList.remove('large-movie-container');
-                }
-                
-                currentClickedContainer = movieContainer;
-                movieContainer.append(infoContainer);
-                infoContainer.append(movieTitle, movieRating, movieOverview, movieReleaseDate,textArea, addToFavorites);
-                
-				movieReleaseDate.textContent = movie.release_date;
-                movieTitle.textContent = movie.title;
-                movieOverview.textContent = movie.overview;
-				textArea.textContent = 'Write Your Review Here!';
-                addToFavorites.textContent = 'Add to Favorites';
-                movieRating.textContent = `Rating: ${movie.vote_average.toFixed(1)}`;
+//DISPLAY LARGE MOVIE CONTAINER --------------------------------------------------------
+function displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea, addToFavorites){
+	const infoContainer = document.createElement('div');
+	const movieTitle = document.createElement('h4');
+    const movieOverview = document.createElement('div');
+    const movieReleaseDate = document.createElement('span');
+    const movieRating = document.createElement('span');
+	const movieImgLarge = document.createElement('img');
 
-                movieContainer.classList.add('large-movie-container');
-                infoContainer.classList.add('moviepage-info-container');
+	if (currentClickedContainer !== null) {
+		currentClickedContainer.nextSibling.style.display = 'none';
+	}
 
-            } else {
-                const prevInfoContainer = currentClickedContainer.querySelector('.moviepage-info-container');
-                currentClickedContainer.removeChild(prevInfoContainer);
-                movieContainer.classList.remove('large-movie-container');
-                currentClickedContainer = null;
-            }
-        })    
-    })
+	currentClickedContainer = movieContainer;
+
+	largeDisplayContainer.textContent = '';
+	largeDisplayContainer.style.display = 'flex';
+	largeDisplayContainer.append(movieImgLarge, infoContainer);
+	infoContainer.append(movieTitle, movieRating, movieOverview, movieReleaseDate, textArea, addToFavorites);
+
+	movieReleaseDate.textContent = movie.release_date;
+	movieTitle.textContent = movie.title;
+	movieOverview.textContent = movie.overview;
+	textArea.textContent = 'Write Your Review Here!';
+	addToFavorites.textContent = 'Add to Favorites';
+	movieRating.textContent = `Rating: ${movie.vote_average.toFixed(1)}`;
+	movieImgLarge.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+
+	movieImgLarge.classList.add('large-movie-img');
+	largeDisplayContainer.classList.add('large-movie-container');
+	infoContainer.classList.add('large-info-container');
+}
+
+//REMOVE LARGE MOVIE DISPLAY ------------------------------------------------------
+function removeLargeContainer(e, largeDisplayContainer, textArea, addToFavorites){
+	if (e.target !== textArea && e.target !== addToFavorites) {
+		largeDisplayContainer.style.display = 'none';
+		currentClickedContainer = null;
+	} else {
+		textArea.textContent = '';
+	}
 }
 
 export {fetchMovies, renderAllMovies};
