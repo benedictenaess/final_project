@@ -8,8 +8,6 @@ import {validateSignUpForm} from './signUpValidation';
 
 const pathName = window.location.pathname;
 
-//VALIDATION -----------------------------------------------------------------------------------
-
 const signInEmail = document.querySelector('.signin-email');
 const signInPassword = document.querySelector('.signin-password');
 const signInEmailErrorSpan = document.querySelector('.email-signin-error-span');
@@ -37,7 +35,7 @@ const favoritesNavButton = document.querySelector('.favorites-nav');
 const profileNavButton = document.querySelector('.profile-nav');
 const signOutButton = document.querySelector('.sign-out-button');
 
-let isMenuVisible = false; // Track the menu visibility state
+let isMenuVisible = false;
 
 const setMenuVisibility = () => {
     if (window.innerWidth > 900) {
@@ -74,29 +72,28 @@ window.addEventListener('resize', setMenuVisibility);
 window.addEventListener('load', setMenuVisibility);
 
 //ACTIVE NAV -----------------------------------------------------------------------
-
 function pageNavigation(){
 	homeNavButton.addEventListener('click',(e)=>{
 		e.preventDefault();
 		window.location.pathname = '/dist/index.html';
 		activeButton(homeNavButton);
-	})
+	});
 	
 	moviesNavButton.addEventListener('click',(e)=>{
 		e.preventDefault();
 		window.location.pathname = '/src/pages/movies.html';
-	})
+	});
 	
 	favoritesNavButton.addEventListener('click',(e)=>{
 		e.preventDefault();
 		window.location.pathname = '/src/pages/favorites.html';
-	})
+	});
 	
 	profileNavButton.addEventListener('click',(e)=>{
 		e.preventDefault();
 		window.location.pathname = '/src/pages/userProfile.html';
-	})
-}
+	});
+};
 
 //FIND EMAIL AND PASSWORD IN AUTH ---------------------------------------------
 async function findEmail(emailFromInput){
@@ -117,7 +114,6 @@ async function findEmail(emailFromInput){
 }
 
 //FIND USER FAVORITE GENRE ------------------------------------------------------
-
 async function userFavoriteGenre(){
 	try {
 		const currentSignedinUser = authService.currentUser;
@@ -133,7 +129,6 @@ async function userFavoriteGenre(){
 		console.log(err.message);
 	}
 }
-
 
 //SIGN UP ----------------------------------------------------------------
 const signUpEmail = document.querySelector('.signup-email');
@@ -160,12 +155,10 @@ const signUpUser = async ()=>{
 	}
 	try {
 		const userCredential = await createUserWithEmailAndPassword(authService, newUser.email, newUser.password);
-		console.log('The user has successfully signed up');
 		newUser = {...newUser, id: userCredential.user.uid};
 		renderUserName(newUser.firstname, newUser.lastname);
 		try {
 			await addDoc(usersCollection, newUser)
-			console.log('User successfully added to users collection');
 		} catch (createUserError) {
 			console.log('Create user error:', createUserError.message);
 		}
@@ -185,9 +178,6 @@ if(signUpButton){
 		try {
 			const emailExists = await findEmail(emailValue);
 			const signUpValidationStatus = validateSignUpForm(firstnameValue, lastnameValue, signUpGenre.value, emailValue, signUpPassword.value.trim(), signUpFirstnameErrorSpan, signUpLastnameErrorSpan, signUpGenreErrorSpan, signUpEmailErrorSpan, signUpPasswordErrorSpan, emailExists);
-
-			console.log(signUpValidationStatus);
-			
 			if(!signUpValidationStatus){
 				await signUpUser();
 			} else {
@@ -199,7 +189,7 @@ if(signUpButton){
 	})
 }
 
-//SIGN IN ------------------------
+//SIGN IN ----------------------------------------------------------------------------------------
 const signInButton = document.querySelector('.sign-in-button_submit');
 const signInForm = document.querySelector('.sign-in-form');
 
@@ -208,7 +198,6 @@ const signInUser = async ()=>{
 		const userEmail = signInEmail.value.toLowerCase().trim();
 		const userPassword = signInPassword.value.trim();
 		const userCredential = await signInWithEmailAndPassword(authService, userEmail, userPassword);
-		console.log('The user has successfully signed in');
 		
 		const signedInUserID = userCredential.user.uid;
 		const querySnapshot = await getDocs(usersCollection);
@@ -228,9 +217,7 @@ if(signInButton){
 
 		try {
 			const {emailExists, existingEmailPassword} = await findEmail(userEmail);
-	
 			const signInValidationStatus = validateSignInForm(userEmail, userPassword, signInEmailErrorSpan, signInPasswordErrorSpan, emailExists, existingEmailPassword);
-			console.log(signInValidationStatus);
 			if(!signInValidationStatus){
 				await signInUser();
 			} 
@@ -240,17 +227,15 @@ if(signInButton){
 	})
 }
 
-//SIGN OUT ------------------------
+//SIGN OUT ------------------------------------------------------------------------------------
 const signInFormVisibility = document.querySelector('.signin-form_visibility');
 const signUpFormVisibility = document.querySelector('.signup-form_visibility');
 
-
 const signOutUser = async ()=>{
 	try {
-		signOut(authService)
-		console.log('The user has succsessfully signed out');
+		signOut(authService);
 	} catch (err) {
-		console.log(err.message)
+		console.log(err.message);
 	}
 };
 
@@ -260,7 +245,7 @@ signOutButton.addEventListener('click', (e)=>{
 	signOutUser();
 })
 
-//RENDER USERS ---------------------------------------
+//RENDER USERS ----------------------------------------------------------------------------------
 const userNameElement = document.createElement('h1');
 const usernameContainer = document.querySelector('.render-username-container');
 
@@ -298,8 +283,7 @@ const renderUsersOnUserProfile = async()=>{
 	}
 }
 
-//DELETE AUTH AND FIRESTORE ---------------------------------------------------
-
+//DELETE AUTH AND FIRESTORE ------------------------------------------------------------------
 const deleteAccountButton = document.querySelector('.delete-account-button');
 
 if(pathName.includes('/src/pages/userProfile.html')){
@@ -324,16 +308,14 @@ const deleteAccount = async ()=>{
 			};
 			usersWithUserIdAndUid.push(user);
 		})
-
 		const userInfoFromDatabase = usersWithUserIdAndUid.find(user => user.userId === signedInUserUid);
 		const userInfoToBeDeleted = userInfoFromDatabase.uniqueId;
 
 		if(userInfoFromDatabase.userId === signedInUserUid){
 			await deleteDoc(doc(database, 'users', userInfoToBeDeleted));
 			await currentSignedinUser.delete();
+			signOutDisplay();
 		}
-		console.log('User account was successfully deleted');
-
 	} catch(err){
 		console.log(err.message);
 	}
@@ -367,8 +349,7 @@ function signInDisplaySignOutButtonVisible(){
 	signOutButton.style.visibility = 'visible';
 }
 
-//TOGGLE SIGN IN/SIGN UP -----------------------------------------------
-
+//TOGGLE SIGN IN/SIGN UP -------------------------------------------------------------
 const signInToggle = document.querySelector('.signin-form_button');
 const signUpToggle = document.querySelector('.signup-form_button');
 
@@ -396,17 +377,13 @@ if(signUpToggle){
 //USER AUTH STATE ----------------------------------------------------------------------
 onAuthStateChanged(authService, (user)=>{
 	if(user){
-		console.log('user is logged in');
 		signInDisplaySignOutButtonVisible();
 		signInDisplay();
 		pageNavigation();
 		renderUsersOnUserProfile();
-		if (pathName.includes('pages/movies') || pathName.includes('/dist/index.html')) {
-			fetchMovies();
-		}
+		fetchMovies();
 		menuToggleButton.addEventListener('click', menuBarToggle);
 	} else{
-		console.log('user is logged out');
 		signOutDisplaySignOutButtonHidden();
 		signOutDisplay();
 	}
@@ -424,15 +401,13 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
 			if(movieReview){
 				const newMovie = {
 					title: movie.original_title,
-					rating: movie.vote_averag.toFixed(1),
+					rating: movie.vote_average.toFixed(1),
 					releaseDate: movie.release_date,
 					img: movie.poster_path,
 					overview: movie.overview,
 					review: movieReview
 				};	
 				await addDoc(favoritesCollection, newMovie);
-				console.log(`${newMovie.title} has been added to favorites`);
-
 			} else {
 				const newMovie = {
 					title: movie.original_title,
@@ -445,7 +420,6 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
 				renderFavoritesToast(newMovie.title, 'has been added to favorites');
 			}
 		} else {
-			console.log('This movie already exists');
 			renderFavoritesToast('This movie has already been added to favorites');
 		}
     } catch(err) {
@@ -453,6 +427,7 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
     }
 }
 
+//RENDER TOAST FOR ADDING FAVORITE MOVIE ----------------------------------------------------------
 function renderFavoritesToast(displayMovie, displayText=''){
 	const addToFavoritesDisplay = document.createElement('div');
 	addToFavoritesContainer.append(addToFavoritesDisplay);
@@ -465,7 +440,6 @@ function renderFavoritesToast(displayMovie, displayText=''){
 
 //RENDER FAVORITE MOVIES -----------------------------------------------------------------
 const favoriteMoviesContainer = document.querySelector('.favorite-movies-container');
-
 
 async function displayFavorites(){
 	try {
@@ -480,8 +454,6 @@ async function displayFavorites(){
 	}
 }
 
-//RENDER FAVORITE MOVIES ----------------------------------------------------
-
 function rednerFavoriteMovies(movie){
 	if(pathName.includes('favorites')){
 		const movieContainer = document.createElement('div');
@@ -494,7 +466,6 @@ function rednerFavoriteMovies(movie){
 		const movieOverview = document.createElement('p');
 		const deleteFavoriteMovie = document.createElement('button');
 		const imgAndInfoContainer = document.createElement('div');
-
 
 		movieTitle.textContent = movie.title;
 		movieReleaseDate.textContent = `Release date: ${movie.releaseDate}`;
@@ -514,7 +485,7 @@ function rednerFavoriteMovies(movie){
 		infoContainer.append(movieRating, movieReleaseDate, movieOverview, movieReview, deleteFavoriteMovie);
 
 		deleteFavoriteMovie.addEventListener('click', (e)=>{
-			const removeContainer = e.target.parentElement.parentElement;
+			const removeContainer = e.target.parentElement.parentElement.parentElement;
 			deleteFavoriteMovieFromDatabase(movie);
 			favoriteMoviesContainer.removeChild(removeContainer);
 			document.addEventListener('DOMContentLoaded', ()=>{
@@ -525,7 +496,6 @@ function rednerFavoriteMovies(movie){
 }
 
 //DELETE FAVORITE MOVIE -------------------------------------------------------------------
-
 async function deleteFavoriteMovieFromDatabase(movie){
     try {
 		let docId = [];
