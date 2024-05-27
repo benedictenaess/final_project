@@ -39,7 +39,6 @@ let currentClickedContainerFrontpage = null;
 async function renderFrontpageApi(movies) {
 	try{
 		const currentUserFavoriteGenre = await userFavoriteGenre();
-		console.log(currentUserFavoriteGenre);
 		const genreName = currentUserFavoriteGenre.charAt(0).toUpperCase() + currentUserFavoriteGenre.slice(1);
 		const userGenreId = genreID[genreName];
 		movies.forEach(movie =>{
@@ -72,7 +71,7 @@ function displayFrontpageMovies(movie, genreName){
 	addToFavorites.addEventListener('click',(e)=>{
 		e.preventDefault();
 		if(textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!'){
-			const movieReview = textArea.value.charAt(1).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
+			const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
 			saveFavoriteMoviesToDatabase(movie, movieReview);
 		} else {
 			saveFavoriteMoviesToDatabase(movie);
@@ -125,9 +124,6 @@ function displayFrontpageMovies(movie, genreName){
 	})
 }
 
-//SAVING MOVIES TO FAVORITEARRAY
-const favoriteMoviesArray = [];
-
 //RENDER MOVIESPAGE API ------------------------------------------------
 function renderMoviepageApi(movies){
     const moviespageContainer = document.querySelector('.moviespage-movies-section');
@@ -149,7 +145,7 @@ function renderMoviepageApi(movies){
 		addToFavorites.addEventListener('click',(e)=>{
 			e.preventDefault();
 			if(textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!'){
-				const movieReview = textArea.value.charAt(1).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
+				const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
 				saveFavoriteMoviesToDatabase(movie, movieReview);
 			} else {
 				saveFavoriteMoviesToDatabase(movie);

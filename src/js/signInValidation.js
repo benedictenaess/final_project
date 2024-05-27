@@ -28,13 +28,15 @@ const validateSignInForm = (emailInput, passwordInput, emailErrorSpan, passwordE
 	} else if (userPassword !== null && passwordInput !== userPassword) {
         errors.errorStatus = true;
         errors.passwordErrorMsg = 'The password is incorrect';
+	} else if (!emailExists) {
+		errors.errorStatus = true;
+        errors.passwordErrorMsg = 'The password is incorrect';
 	} else {
 		errors.passwordErrorMsg = '';
 	}
-  
+
 	emailErrorSpan.textContent = errors.emailErrorMsg;
 	passwordErrorSpan.textContent = errors.passwordErrorMsg;
-  
 	return errors.errorStatus;
 };
   

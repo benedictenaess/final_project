@@ -170,7 +170,7 @@ header {
 
 .signup-form_visibility {
 	display: none;
-	height: 500px;
+	height: auto;
 }
 
 .sign-in-form,
@@ -712,7 +712,7 @@ input,
 		width: 350px;
 	}
 	.signup-form_visibility {
-		height: 580px;
+		height: auto;
 	}
 	.sign-in-form,
 	.sign-up-form {

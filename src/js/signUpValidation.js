@@ -30,23 +30,19 @@ const validateSignUpForm =(firstnameInput, lastnameInput, genreInput, emailInput
 	}
 
 	const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-	if(emailInput){
-		if(emailRegex.test(emailInput)){
-			if(!emailExists){
-				errors.emailErrorMsg = '';
-			} else {
-				errors.errorStatus = true;
-				errors.emailErrorMsg = 'This email is already registered to a user';
-			}
-		} else {
-			errors.errorStatus = true;
-			errors.emailErrorMsg = 'Email must be an email';
-		}
-	} else {
+	if(!emailInput){
 		errors.errorStatus = true;
 		errors.emailErrorMsg = 'Email is required';
+	} else if(!emailRegex.test(emailInput)){
+		errors.errorStatus = true;
+		errors.emailErrorMsg = 'Email must be an email account';
+	} else if(!emailExists){
+		errors.errorStatus = true;
+				errors.emailErrorMsg = 'This email is already registered to a user';
+	} else {
+		errors.emailErrorMsg = '';
 	}
-
+	
 	const forbiddenSymbolsPattern = /[<|$\-%#@*?!^()[\]{}=;'",.:\\\s]/;
     
 	if(passwordInput){
