@@ -252,11 +252,10 @@ input,
 	color: var(--color-secondary);
 }
 
-/* MAIN CONTENT HOMEPAGE ------------------------------------------------------------------- */
+/* MAIN CONTENT HOMEPAGE/FAVORITE GENRE HOMEPAGE ----------------------------------------------------------- */
 .main-content {
 	display: none;
 	width: 100%;
-	height: 100vh;
 	font-size: var(--font-size-extra-large);
 	margin-top: 5rem;
 }
@@ -299,7 +298,7 @@ input,
 	color: var(--color-accent-1);
 }
 
-.all-movies-container {
+.frontpage-favorite-genre-container {
 	display: flex;
 	flex-flow: row nowrap;
 	margin-top: 2rem;
@@ -308,104 +307,22 @@ input,
 	overflow-y: scroll;
 }
 
-.each-movie-container {
-	height: 350px;
-}
-
-.all-movies-container img {
-	height: 350px;
-	margin: 1rem;
+.frontpage-favorite-genre-img {
+	height: 450px;
 	border-radius: var(--border-radius);
 	box-shadow: 3px 3px 5px var(--color-accent-3);
 	transition: box-shadow 0.2s ease;
 }
 
-.all-movies-container img:hover {
+.frontpage-favorite-genre-img:hover {
 	cursor: pointer;
 	box-shadow: 5px 5px 20px 5px var(--color-accent-2);
-}
-
-.large-movie-container-frontpage {
-	cursor: pointer;
-	display: flex;
-    flex-direction: row;
-    width: 70%;
-    height: 50%;
-	min-height: 350px;
-    background-color: var(--color-accent-1);
-    border-radius: var(--border-radius);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-	transform: translate(-50%, -50%);
-    justify-content: flex-start;
-    align-items: center;
-	border-radius: var(--border-radius);
-	box-shadow: 3px 3px 5px var(--color-accent-3);
-	padding: 1rem;
-}
-
-.info-container-frontpage {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: space-between;
-	gap: 1rem;
-	height: 100%;
-	width: 100%;
-	line-height: var(--line-height);
-	padding: 1rem;
-}
-
-.info-container-frontpage h3 {
-	font-size: 20px;
-}
-
-.info-container-frontpage textarea {
-	width: 100%;
-	height: 20%;
-	padding: 0.5rem;
-	font-size: var(--font-size-base);
-	color: var(--color-secondary);
-	border: 2px solid var(--color-accent-3);
-	border-radius: var(--border-radius);
-	box-shadow: 2px 2px 3px var(--color-secondary);
-	resize: none;
-}
-
-.info-container-frontpage textarea:focus {
-	outline: none;
-}
-
-.info-container-frontpage span{
-	color: var(--color-primary);
-	font-size: 16px;
-}
-
-.info-container-frontpage div{
-	text-overflow: ellipsis;
-	overflow-y: hidden;
-	color: var(--color-primary);
-	font-size: 16px;
-}
-
-.info-container-frontpage button {
-	color: var(--color-secondary);
-	padding: 0.3rem;
-	border: 2px solid var(--color-secondary);
-	border-radius: var(--border-radius);
-	box-shadow: 2px 2px 3px var(--color-accent-3);
-}
-
-.info-container-frontpage button:hover {
-	background-color: var(--color-accent-2);
 }
 
 .divider {
 	width: 100vw;
 	display: flex;
 	justify-content: center;
-	margin-top: 5rem;
 }
 
 .divider-line {
@@ -469,30 +386,31 @@ input,
 	padding: 0 0.5rem;
 }
 
-.moviespage-movies-section {
+.frontpage-movies-section {
 	display: flex;
 	flex-flow: row wrap;
-	justify-content: space-between;
-	gap: 0.5rem;
+	justify-content: space-evenly;
 	width: 100%;
 	margin-top: 2rem;
 }
 
-.moviespage-movies-container img{
-	height: 350px;
+.frontpage-all-movies-container img {
+	width: 180px;
 	margin: 1rem;
 	border-radius: var(--border-radius);
 	box-shadow: 3px 3px 5px var(--color-accent-3);
 	transition: box-shadow 0.2s ease;
 }
 
-.moviespage-movies-container img:hover {
+.frontpage-all-movies-container img:hover {
 	cursor: pointer;
 	box-shadow: 5px 5px 20px 5px var(--color-accent-2);
 }
 
 .large-movie-container {
-	cursor: pointer;
+	position: fixed;
+    top: 50%;
+    left: 50%;
 	display: flex;
     flex-direction: row;
     width: 70%;
@@ -500,17 +418,15 @@ input,
 	min-height: 350px;
     background-color: var(--color-accent-1);
     border-radius: var(--border-radius);
-    position: fixed;
-    top: 50%;
-    left: 50%;
 	transform: translate(-50%, -50%);
     justify-content: flex-start;
     align-items: center;
 	border-radius: var(--border-radius);
 	box-shadow: 3px 3px 5px var(--color-accent-3);
+	cursor: pointer;
 }
 
-.moviepage-info-container {
+.large-info-container {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -518,15 +434,23 @@ input,
 	gap: 1rem;
 	height: 100%;
 	width: 100%;
+	font-size: var(--font-size-base);
 	line-height: var(--line-height);
 	padding: 2rem 1rem 2rem 0rem;
 }
 
-.moviepage-info-container textarea {
+.large-movie-img {
+	height: 350px;
+	margin: 1rem;
+	border-radius: var(--border-radius);
+	box-shadow: 3px 3px 5px var(--color-accent-3);
+	transition: box-shadow 0.2s ease;
+}
+
+.large-info-container textarea {
 	width: 100%;
 	height: 20%;
 	padding: 0.5rem;
-	font-size: var(--font-size-base);
 	color: var(--color-secondary);
 	border: 2px solid var(--color-accent-3);
 	border-radius: var(--border-radius);
@@ -534,15 +458,15 @@ input,
 	resize: none;
 }
 
-.moviepage-info-container textarea:focus {
+.large-info-container textarea:focus {
 	outline: none;
 }
 
-.moviepage-info-container div{
+.large-info-container div{
 	overflow: hidden;
 }
 
-.moviepage-info-container button {
+.large-info-container button {
 	color: var(--color-secondary);
 	padding: 0.3rem;
 	border: 2px solid var(--color-secondary);
@@ -550,7 +474,7 @@ input,
 	box-shadow: 2px 2px 3px var(--color-accent-3);
 }
 
-.moviepage-info-container button:hover {
+.large-info-container button:hover {
 	background-color: var(--color-accent-2);
 }
 
@@ -762,14 +686,14 @@ input,
 		padding: 0rem 2rem;
 		font-size: 20px;
 	}
-	.all-movies-container {
+	.frontpage-favorite-genre-container {
 		margin-top: 3rem;
 		gap: 1rem;
 		padding: 0rem;
 		overflow-y: scroll;
 	}
-	.each-movie-container {
-		height: 450px;
+	.frontpage-favorite-genre-container img {
+		height: 350px;
 	}
 	.large-movie-container-frontpage {
 		flex-direction: column;
@@ -789,12 +713,9 @@ input,
 	.find-movie-info-container {
 		width: 100%;
 	}
-	.moviespage-movies-section {
+	.frontpage-movies-section {
 		gap: 0rem;
 		justify-content: center;
-	}
-	.moviespage-movies-container img{
-		height: 300px;
 	}
 	.large-movie-container {
 		cursor: pointer;
