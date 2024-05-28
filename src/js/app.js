@@ -71,7 +71,7 @@ window.addEventListener('load', setMenuVisibility);
 function pageNavigation(){
 	homeNavButton.addEventListener('click',(e)=>{
 		e.preventDefault();
-		window.location.pathname = '/index.html';
+		window.location.pathname = '/dist/index.html';
 		activeButton(homeNavButton);
 	});
 	
@@ -232,7 +232,7 @@ const signOutUser = async ()=>{
 
 signOutButton.addEventListener('click', (e)=>{
 	e.preventDefault();
-	window.location.href = '/index.html';
+	window.location.href = '/dist/index.html';
 	signOutUser();
 })
 
@@ -280,7 +280,7 @@ const deleteAccountButton = document.querySelector('.delete-account-button');
 if(pathName.includes('/src/pages/userProfile.html')){
 	deleteAccountButton.addEventListener('click', async()=>{
 		await deleteAccount();
-		window.location.pathname = '/index.html';
+		window.location.pathname = '/dist/index.html';
 	})
 }
 
@@ -315,7 +315,7 @@ const deleteAccount = async ()=>{
 //CHANGING DISPLAY SINGIN/OUT ------------------------------------------
 const movieSection = document.querySelector('.find-movie-section');
 function signInDisplay(){
-	if(window.location.pathname === '/index.html'){
+	if(window.location.pathname === '/dist/index.html'){
 		signInForm.reset();
 		signUpForm.reset();
 		mainContentSection.style.display = 'block';
@@ -325,7 +325,7 @@ function signInDisplay(){
 }
 
 function signOutDisplay(){
-	if(window.location.pathname === '/index.html'){
+	if(window.location.pathname === '/dist/index.html'){
 		mainContentSection.style.display = 'none';
 		movieSection.style.display = 'none';
 		formSection.style.display = 'block';
