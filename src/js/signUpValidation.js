@@ -36,9 +36,9 @@ const validateSignUpForm =(firstnameInput, lastnameInput, genreInput, emailInput
 	} else if(!emailRegex.test(emailInput)){
 		errors.errorStatus = true;
 		errors.emailErrorMsg = 'Email must be an email account';
-	} else if(!emailExists){
+	} else if(emailExists){
 		errors.errorStatus = true;
-				errors.emailErrorMsg = 'This email is already registered to a user';
+		errors.emailErrorMsg = 'This email is already registered to a user';
 	} else {
 		errors.emailErrorMsg = '';
 	}
