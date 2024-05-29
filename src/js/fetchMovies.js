@@ -14,8 +14,7 @@ const fetchMovies = async ()=>{
 		filterMovies(data);
 		await renderFirstMovieArray(data);
 	} catch (err){
-		const errorMsgContainer = document.querySelector('.frontpage-favorite-genre-container');
-		errorMsgContainer.textContent = 'Try to reload the page';
+		console.log(err.message);
 	}
 }
 
@@ -44,8 +43,7 @@ async function renderFirstMovieArray(movies) {
 			})
 		})
 	} catch(err){
-		const errorMsgContainer = document.querySelector('.frontpage-favorite-genre-container');
-		errorMsgContainer.textContent = 'Try to reload the page';
+		console.log(err);
 	}
 }
 
@@ -80,7 +78,7 @@ function displayFrontpageMovies(movie, genreName){
 		displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea, addToFavorites)
 	})
 	largeDisplayContainer.addEventListener('click', (e) => {
-		removeLargeContainer(e, largeDisplayContainer, textArea, addToFavorites)
+		removeLargeContainer(e, largeDisplayContainer, textArea)
 	});
 }
 
@@ -117,7 +115,7 @@ function renderAllMovies(movies) {
         });
 
         largeDisplayContainer.addEventListener('click', (e) => {
-            removeLargeContainer(e, largeDisplayContainer, textArea, addToFavorites)
+            removeLargeContainer(e, largeDisplayContainer, textArea)
         });
     });
 }
@@ -156,8 +154,8 @@ function displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer
 }
 
 //REMOVE LARGE MOVIE DISPLAY ------------------------------------------------------
-function removeLargeContainer(e, largeDisplayContainer, textArea, addToFavorites){
-	if (e.target !== textArea && e.target !== addToFavorites) {
+function removeLargeContainer(e, largeDisplayContainer, textArea){
+	if (e.target !== textArea && e.target) {
 		largeDisplayContainer.style.display = 'none';
 		currentClickedContainer = null;
 	} else {

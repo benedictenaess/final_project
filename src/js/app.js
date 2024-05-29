@@ -1,7 +1,7 @@
 import firebaseConfig from "./firebaseConfig";
 import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'firebase/auth';
-import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
+import {collection, getFirestore, addDoc, getDocs, deleteDoc, doc, setDoc} from 'firebase/firestore';
 import {fetchMovies} from './fetchMovies';
 import { validateSignInForm } from "./signInValidation";
 import {validateSignUpForm} from './signUpValidation';
@@ -99,7 +99,6 @@ async function findEmail(emailFromInput){
 		}
 		return {emailExists, existingEmailPassword};
 	} catch (err){
-		console.log(err.message);
 		return false;
 	}
 }
@@ -151,11 +150,13 @@ const signUpUser = async ()=>{
 		try {
 			await addDoc(usersCollection, newUser)
 		} catch (createUserError) {
-			console.log('Create user error:', createUserError.message);
+			const errorMsgContainer = document.querySelector('sign-up-button_container');
+			errorMsgContainer.textContent = 'Error signing up';
 		}
 	} catch (authError){
-		console.log('Authentication error:', authError.message);
-		return
+		const errorMsgContainer = document.querySelector('sign-up-button_container');
+		errorMsgContainer.textContent = 'Error signing up';
+		return;
 	} 
 };
 
@@ -175,7 +176,8 @@ if(signUpButton){
 				return;
 			}
 		} catch (err){
-			console.log(err.message);
+			const errorMsgContainer = document.querySelector('signup-form_visibility');
+			errorMsgContainer.textContent = 'Error signing up';
 		}
 	})
 }
@@ -196,7 +198,8 @@ const signInUser = async ()=>{
 		const signedInUser = allUsers.find((user)=> user.id === signedInUserID);
 		renderUserName(signedInUser.firstname, signedInUser.lastname);
 	} catch (err) {
-			console.log(err.message)
+		const errorMsgContainer = document.querySelector('signin-form_visibility');
+		errorMsgContainer.textContent = 'Error signing in';
 	}
 };
 
@@ -213,7 +216,8 @@ if(signInButton){
 				await signInUser();
 			} 
 		} catch (err){
-			console.log(err.message);
+			const errorMsgContainer = document.querySelector('signin-form_visibility');
+			errorMsgContainer.textContent = 'Error signing in';
 		}
 	})
 }
@@ -389,8 +393,9 @@ const addToFavoritesContainer = document.querySelector('.add-to-favorites');
 async function saveFavoriteMoviesToDatabase(movie, movieReview) {
     try {
 		const querySnapshot = await getDocs(favoritesCollection);
-		const existingMovies = querySnapshot.docs.map(doc => doc.data());
-		const isExisting = existingMovies.some(existingMovie => existingMovie.title === movie.original_title);
+		const existingMoviesArray = querySnapshot.docs.map(doc => doc.data());
+		const isExisting = existingMoviesArray.some(existingMovie => existingMovie.title === movie.original_title);
+		const existingMovie = existingMoviesArray.find(existingMovie => existingMovie.title === movie.original_title);
 		if(!isExisting){
 			if(movieReview){
 				const newMovie = {
@@ -399,18 +404,10 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
 					releaseDate: movie.release_date,
 					img: movie.poster_path,
 					overview: movie.overview,
-					review: movieReview
+					review: movieReview ? movieReview : ''
 				};	
 				await addDoc(favoritesCollection, newMovie);
-			} else {
-				const newMovie = {
-					title: movie.original_title,
-					rating: movie.vote_average.toFixed(1),
-					releaseDate: movie.release_date,
-					img: movie.poster_path,
-					overview: movie.overview
-				};
-				await addDoc(favoritesCollection, newMovie);
+	
 				renderFavoritesToast(newMovie.title, 'has been added to favorites');
 			}
 		} else {
@@ -468,6 +465,7 @@ function rednerFavoriteMovies(movie){
 		movieOverview.textContent = movie.overview;
 		movieImg.src = `https://image.tmdb.org/t/p/w500${movie.img}`;
 		deleteFavoriteMovie.textContent = 'Remove from Favorites';
+
 		movieReview.textContent = movie.review ? `User review: ${movie.review}` : '';
 
 		movieContainer.classList.add('each-favorite-movie-container');
