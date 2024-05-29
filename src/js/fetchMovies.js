@@ -1,5 +1,5 @@
 import {filterMovies, sortMovies, genreID} from './filterMovies';
-import {saveFavoriteMoviesToDatabase, userFavoriteGenre} from './app';
+import {userFavoriteGenre, createFavoritesCollectionAndAddMovieToFavorites} from './app';
 
 const pathName = window.location.pathname;
 const selectCategory = document.querySelector('#categories');
@@ -60,9 +60,9 @@ function displayFrontpageMovies(movie, genreName){
 		e.preventDefault();
 		if(textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!'){
 			const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
-			saveFavoriteMoviesToDatabase(movie, movieReview);
+			createFavoritesCollectionAndAddMovieToFavorites(movie, movieReview);
 		} else {
-			saveFavoriteMoviesToDatabase(movie);
+			createFavoritesCollectionAndAddMovieToFavorites(movie);
 		}
 	})
 	frontpageHeaderInfo.textContent = `Check out new releases of your favorite movie genre: ${genreName}`;
@@ -97,9 +97,9 @@ function renderAllMovies(movies) {
             e.preventDefault();
             if (textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!') {
                 const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
-                saveFavoriteMoviesToDatabase(movie, movieReview);
+				createFavoritesCollectionAndAddMovieToFavorites(movie, movieReview)
             } else {
-                saveFavoriteMoviesToDatabase(movie);
+				createFavoritesCollectionAndAddMovieToFavorites(movie)
             }
         });
 

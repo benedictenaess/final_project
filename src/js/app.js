@@ -25,7 +25,7 @@ initializeApp(firebaseConfig);
 const authService = getAuth();
 const database = getFirestore();
 const usersCollection = collection(database, 'users');
-const favoritesCollection = collection(database, 'favorites');
+// const favoritesCollection = collection(database, 'favorites');
 
 //HAMBURGER MENU -----------------------------------------------------------------------------
 const menuToggleButton = document.querySelector('.header-logo');
@@ -150,12 +150,10 @@ const signUpUser = async ()=>{
 		try {
 			await addDoc(usersCollection, newUser)
 		} catch (createUserError) {
-			const errorMsgContainer = document.querySelector('sign-up-button_container');
+			const errorMsgContainer = document.querySelector('error-sign-up');
 			errorMsgContainer.textContent = 'Error signing up';
 		}
 	} catch (authError){
-		const errorMsgContainer = document.querySelector('sign-up-button_container');
-		errorMsgContainer.textContent = 'Error signing up';
 		return;
 	} 
 };
@@ -176,7 +174,7 @@ if(signUpButton){
 				return;
 			}
 		} catch (err){
-			const errorMsgContainer = document.querySelector('signup-form_visibility');
+			const errorMsgContainer = document.querySelector('error-sign-up');
 			errorMsgContainer.textContent = 'Error signing up';
 		}
 	})
@@ -381,6 +379,9 @@ onAuthStateChanged(authService, (user)=>{
 		renderUsersOnUserProfile();
 		fetchMovies();
 		menuToggleButton.addEventListener('click', menuBarToggle);
+		if(pathName.includes('favorites')){
+			displayFavorites();
+		}
 	} else{
 		signOutDisplaySignOutButtonHidden();
 		signOutDisplay();
@@ -390,32 +391,50 @@ onAuthStateChanged(authService, (user)=>{
 //ADD TO FAVORITES ----------------------------------------------------------------------
 const addToFavoritesContainer = document.querySelector('.add-to-favorites');
 
-async function saveFavoriteMoviesToDatabase(movie, movieReview) {
-    try {
-		const querySnapshot = await getDocs(favoritesCollection);
-		const existingMoviesArray = querySnapshot.docs.map(doc => doc.data());
-		const isExisting = existingMoviesArray.some(existingMovie => existingMovie.title === movie.original_title);
-		const existingMovie = existingMoviesArray.find(existingMovie => existingMovie.title === movie.original_title);
-		if(!isExisting){
-			if(movieReview){
-				const newMovie = {
-					title: movie.original_title,
-					rating: movie.vote_average.toFixed(1),
-					releaseDate: movie.release_date,
-					img: movie.poster_path,
-					overview: movie.overview,
-					review: movieReview ? movieReview : ''
-				};	
-				await addDoc(favoritesCollection, newMovie);
-	
-				renderFavoritesToast(newMovie.title, 'has been added to favorites');
+async function createFavoritesCollectionAndAddMovieToFavorites(movie, movieReview){
+	try {
+		const currentSignedinUseronAuth = authService.currentUser;
+		const signedInUserUid = currentSignedinUseronAuth.uid;
+
+		const querySnapshot = await getDocs(usersCollection);
+		const usersWithUserIdAndUid = [];
+		querySnapshot.forEach(doc =>{
+			const userData = doc.data()
+			const user = {
+				uniqueId: doc.id,
+				userId: userData.id
+			};
+			usersWithUserIdAndUid.push(user);
+		})
+		const userInfoFromDatabase = usersWithUserIdAndUid.find(user => user.userId === signedInUserUid);
+		const userDocRef = userInfoFromDatabase.uniqueId;
+
+		const currentUserDatabase = doc(database, 'users', userDocRef);
+		const favoritesCollectionRef = collection(currentUserDatabase, 'favorites');
+		
+
+		const querySnapshot2 = await getDocs(favoritesCollectionRef);
+		const favoriteMoviesInDatabase = querySnapshot2.docs.map(doc => doc.data());
+        const movieAlreadyExists = favoriteMoviesInDatabase.some(existingMovie => existingMovie.title === movie.original_title);
+
+		if(!movieAlreadyExists){
+			const favoriteMovie = {
+				title: movie.original_title,
+				rating: movie.vote_average.toFixed(1),
+				releaseDate: movie.release_date,
+				img: movie.poster_path,
+				overview: movie.overview,
+				review: movieReview ? movieReview : ''
 			}
+			await addDoc(favoritesCollectionRef, favoriteMovie);
+			renderFavoritesToast(favoriteMovie.title, 'has been added to favorites');
 		} else {
 			renderFavoritesToast('This movie has already been added to favorites');
 		}
-    } catch(err) {
-        console.log(err.message);
-    }
+
+	} catch(err){
+		console.log(err.message);
+	}
 }
 
 //RENDER TOAST FOR ADDING FAVORITE MOVIE ----------------------------------------------------------
@@ -434,19 +453,39 @@ const favoriteMoviesContainer = document.querySelector('.favorite-movies-contain
 
 async function displayFavorites(){
 	try {
-		favoriteMoviesContainer.textContent = '';
-		const querySnapshot = await getDocs(favoritesCollection);
-		const allFavoritMovies = querySnapshot.docs.map(doc => doc.data());
-		allFavoritMovies.forEach((movie) =>{
-			rednerFavoriteMovies(movie);
+        favoriteMoviesContainer.textContent = '';
+
+		const currentSignedinUseronAuth = authService.currentUser;
+		const signedInUserUid = currentSignedinUseronAuth.uid;
+
+		const querySnapshot = await getDocs(usersCollection);
+		const usersWithUserIdAndUid = [];
+		querySnapshot.forEach(doc =>{
+			const userData = doc.data()
+			const user = {
+				uniqueId: doc.id,
+				userId: userData.id
+			};
+			usersWithUserIdAndUid.push(user);
 		})
-	} catch (err){
+		const userInfoFromDatabase = usersWithUserIdAndUid.find(user => user.userId === signedInUserUid);
+		const userDocRef = userInfoFromDatabase.uniqueId;
+
+		const currentUserDatabase = doc(database, 'users', userDocRef);
+		const favoritesCollectionRef = collection(currentUserDatabase, 'favorites');
+		const querySnapshot2 = await getDocs(favoritesCollectionRef); 
+		const favoriteMovies = querySnapshot2.docs.map(doc => doc.data());
+    
+        favoriteMovies.forEach(movie => {
+            renderFavoriteMovies(movie);
+        });
+    } catch (err) {
 		const errorMsgContainer = document.querySelector('.favorite-movies-container');
 		errorMsgContainer.textContent = 'Try to reload the page';
 	}
 }
 
-function rednerFavoriteMovies(movie){
+function renderFavoriteMovies(movie){
 	if(pathName.includes('favorites')){
 		const movieContainer = document.createElement('div');
 		const movieImg = document.createElement('img');
@@ -491,23 +530,39 @@ function rednerFavoriteMovies(movie){
 //DELETE FAVORITE MOVIE -------------------------------------------------------------------
 async function deleteFavoriteMovieFromDatabase(movie){
     try {
+		const currentSignedinUseronAuth = authService.currentUser;
+		const signedInUserUid = currentSignedinUseronAuth.uid;
+		const querySnapshot = await getDocs(usersCollection);
+		const usersWithUserIdAndUid = [];
+		querySnapshot.forEach(doc =>{
+			const userData = doc.data()
+			const user = {
+				uniqueId: doc.id,
+				userId: userData.id
+			};
+			usersWithUserIdAndUid.push(user);
+		})
+		const userInfoFromDatabase = usersWithUserIdAndUid.find(user => user.userId === signedInUserUid);
+		const userDocRef = userInfoFromDatabase.uniqueId;
+
+		const currentUserDatabase = doc(database, 'users', userDocRef);
+		const favoritesCollectionRef = collection(currentUserDatabase, 'favorites');
+
 		let docId = [];
-        const querySnapshot = await getDocs(favoritesCollection);
-        for (const doc of querySnapshot.docs) {
+
+        const querySnapshot2 = await getDocs(favoritesCollectionRef);
+        for (const doc of querySnapshot2.docs) {
             const favoriteMovie = doc.data();
 			if (favoriteMovie.title === movie.title) {
 				docId.push(doc.id);
 			}
         }
 		const docToDelete = docId[0];
-		await deleteDoc(doc(database, 'favorites', docToDelete));
+		await deleteDoc(doc(favoritesCollectionRef, docToDelete));
     } catch (err){
         console.log(err.message);
     }
 }
 
-if(pathName.includes('favorites')){
-	displayFavorites();
-}
 
-export {saveFavoriteMoviesToDatabase, userFavoriteGenre}
+export {userFavoriteGenre, createFavoritesCollectionAndAddMovieToFavorites}
