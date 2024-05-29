@@ -415,7 +415,6 @@ async function saveFavoriteMoviesToDatabase(movie, movieReview) {
 			}
 		} else {
 			renderFavoritesToast('This movie has already been added to favorites');
-
 		}
     } catch(err) {
         console.log(err.message);
@@ -445,7 +444,8 @@ async function displayFavorites(){
 			rednerFavoriteMovies(movie);
 		})
 	} catch (err){
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.favorite-movies-container');
+		errorMsgContainer.textContent = 'Try to reload the page';
 	}
 }
 

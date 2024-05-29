@@ -8,13 +8,14 @@ const movieArray = [];
 
 const fetchMovies = async ()=>{
 	try {
-		const response = await fetch('http://localhost:2000/');
+		const response = await fetch('http://localhost:2500/');
 		const data = await response.json();
 		movieArray.push(...data);
 		filterMovies(data);
 		await renderFirstMovieArray(data);
 	} catch (err){
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.frontpage-favorite-genre-container');
+		errorMsgContainer.textContent = 'Try to reload the page';
 	}
 }
 
@@ -42,9 +43,9 @@ async function renderFirstMovieArray(movies) {
 				} 
 			})
 		})
-
 	} catch(err){
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.frontpage-favorite-genre-container');
+		errorMsgContainer.textContent = 'Try to reload the page';
 	}
 }
 
@@ -54,11 +55,6 @@ function displayFrontpageMovies(movie, genreName){
 	const frontpageHeaderInfo = document.querySelector('.frontpage-info');
 	const movieContainer = document.createElement('div');
 	const movieImg = document.createElement('img');
-	// const infoContainer = document.createElement('div');
-	// const movieTitle = document.createElement('h3');
-	// const movieOverview = document.createElement('div');
-	// const movieRating = document.createElement('span');
-	// const movieReleaseDate = document.createElement('span');
 	const addToFavorites = document.createElement('button');
 	const textArea = document.createElement('textarea');
 

@@ -9,7 +9,8 @@ const fetchGenreId = async ()=>{
 			genreID[genre.name] = genre.id;
 		})
 	} catch (err){
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.frontpage-movies-section');
+		errorMsgContainer.textContent = 'Try to reload the page';
 	}
 }
 
@@ -36,7 +37,8 @@ const filterMovies=(movies)=>{
 					}
 				}
 			} catch (err){
-				console.log(err.message);
+				const errorMsgContainer = document.querySelector('.frontpage-movies-section');
+				errorMsgContainer.textContent = 'Try to reload the page';
 			}
 		})
 	})

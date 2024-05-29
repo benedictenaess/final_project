@@ -3,7 +3,7 @@ import cors from 'cors';
 import fetch from 'node-fetch';
 import 'dotenv/config';
 
-const PORT = 2000;
+const PORT = 2500;
 const app = express();
 app.use(cors());
 
