@@ -22,7 +22,7 @@ const {API_KEY} = process.env
 
 app.get('/', async (req, res)=>{
 	try {
-		const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`, options);
+		const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options);
 		const data = await response.json();
 		const allGenres = data.genres;
 		res.json(allGenres);
