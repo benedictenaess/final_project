@@ -25,7 +25,6 @@ initializeApp(firebaseConfig);
 const authService = getAuth();
 const database = getFirestore();
 const usersCollection = collection(database, 'users');
-// const favoritesCollection = collection(database, 'favorites');
 
 //HAMBURGER MENU -----------------------------------------------------------------------------
 const menuToggleButton = document.querySelector('.header-logo');
@@ -116,7 +115,9 @@ async function userFavoriteGenre(){
 	
 		return currentUserFavoriteGenre;
 	} catch(err){
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.main-content');
+		errorMsgContainer.textContent = 'Try to reload the page';
+		errorMsgContainer.classList.add('catch-error-style');
 	}
 }
 
@@ -135,7 +136,7 @@ const formSection = document.querySelector('.form-section');
 const signUpUser = async ()=>{
 	const firstnameValue = signUpFirstname.value.charAt(0).toUpperCase() + signUpFirstname.value.slice(1).toLowerCase().trim();
 	const lastnameValue = signUpLastname.value.charAt(0).toUpperCase() + signUpLastname.value.slice(1).toLowerCase().trim();
-
+	
 	let newUser = {
 		firstname: firstnameValue,
 		lastname: lastnameValue,
@@ -150,11 +151,14 @@ const signUpUser = async ()=>{
 		try {
 			await addDoc(usersCollection, newUser)
 		} catch (createUserError) {
-			const errorMsgContainer = document.querySelector('error-sign-up');
-			errorMsgContainer.textContent = 'Error signing up';
+			const errorMsgContainer = document.querySelector('.error-sign-up');
+			errorMsgContainer.textContent = 'Unexpected error signing up';
+			errorMsgContainer.classList.add('catch-error-style');
 		}
 	} catch (authError){
-		return;
+		const errorMsgContainer = document.querySelector('.error-sign-up');
+		errorMsgContainer.textContent = 'Unexpected error signing up';
+		errorMsgContainer.classList.add('catch-error-style');
 	} 
 };
 
@@ -166,16 +170,16 @@ if(signUpButton){
 		const emailValue = signUpEmail.value.toLowerCase().trim();
 		
 		try {
-			const emailExists = await findEmail(emailValue);
-			const signUpValidationStatus = validateSignUpForm(firstnameValue, lastnameValue, signUpGenre.value, emailValue, signUpPassword.value.trim(), signUpFirstnameErrorSpan, signUpLastnameErrorSpan, signUpGenreErrorSpan, signUpEmailErrorSpan, signUpPasswordErrorSpan, emailExists);
+			const signUpValidationStatus = validateSignUpForm(firstnameValue, lastnameValue, signUpGenre.value, emailValue, signUpPassword.value.trim(), signUpFirstnameErrorSpan, signUpLastnameErrorSpan, signUpGenreErrorSpan, signUpEmailErrorSpan, signUpPasswordErrorSpan);
 			if(!signUpValidationStatus){
 				await signUpUser();
 			} else {
 				return;
 			}
 		} catch (err){
-			const errorMsgContainer = document.querySelector('error-sign-up');
-			errorMsgContainer.textContent = 'Error signing up';
+			const errorMsgContainer = document.querySelector('.error-sign-up');
+			errorMsgContainer.textContent = 'Unexpected error signing up';
+			errorMsgContainer.classList.add('catch-error-style');
 		}
 	})
 }
@@ -196,8 +200,9 @@ const signInUser = async ()=>{
 		const signedInUser = allUsers.find((user)=> user.id === signedInUserID);
 		renderUserName(signedInUser.firstname, signedInUser.lastname);
 	} catch (err) {
-		const errorMsgContainer = document.querySelector('signin-form_visibility');
-		errorMsgContainer.textContent = 'Error signing in';
+		const errorMsgContainer = document.querySelector('.error-sign-in');
+		errorMsgContainer.textContent = 'Unexpected error signing in';
+		errorMsgContainer.classList.add('catch-error-style');
 	}
 };
 
@@ -206,7 +211,7 @@ if(signInButton){
 		e.preventDefault();
 		const userEmail = signInEmail.value.toLowerCase().trim();
 		const userPassword = signInPassword.value.trim();
-
+		
 		try {
 			const {emailExists, existingEmailPassword} = await findEmail(userEmail);
 			const signInValidationStatus = validateSignInForm(userEmail, userPassword, signInEmailErrorSpan, signInPasswordErrorSpan, emailExists, existingEmailPassword);
@@ -214,8 +219,9 @@ if(signInButton){
 				await signInUser();
 			} 
 		} catch (err){
-			const errorMsgContainer = document.querySelector('signin-form_visibility');
-			errorMsgContainer.textContent = 'Error signing in';
+			const errorMsgContainer = document.querySelector('.error-sign-in');
+			errorMsgContainer.textContent = 'Unexpected error signing in';
+			errorMsgContainer.classList.add('catch-error-style');
 		}
 	})
 }
@@ -228,7 +234,9 @@ const signOutUser = async ()=>{
 	try {
 		signOut(authService);
 	} catch (err) {
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.main-content');
+		errorMsgContainer.textContent = 'Unexpected error logging out';
+		errorMsgContainer.classList.add('catch-error-style');
 	}
 };
 
@@ -272,7 +280,10 @@ const renderUsersOnUserProfile = async()=>{
 			userGenre.textContent = `Your Favorite Genre is: ${signedInUser.genre}`;
 		}
 	} catch(err){
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.user-container');
+		errorMsgContainer.textContent = 'Unexpected error loading page';
+		errorMsgContainer.classList.add('catch-error-style');
+
 	}
 }
 
@@ -310,7 +321,9 @@ const deleteAccount = async ()=>{
 			signOutDisplay();
 		}
 	} catch(err){
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.main-section-userprofile');
+		errorMsgContainer.textContent = 'Unexpected error deleting account';
+		errorMsgContainer.classList.add('catch-error-style');
 	}
 }
 
@@ -433,7 +446,9 @@ async function createFavoritesCollectionAndAddMovieToFavorites(movie, movieRevie
 		}
 
 	} catch(err){
-		console.log(err.message);
+		const errorMsgContainer = document.querySelector('.main-content');
+		errorMsgContainer.textContent = 'Unexpected error adding movie to favorites';
+		errorMsgContainer.classList.add('catch-error-style');
 	}
 }
 
@@ -482,6 +497,7 @@ async function displayFavorites(){
     } catch (err) {
 		const errorMsgContainer = document.querySelector('.favorite-movies-container');
 		errorMsgContainer.textContent = 'Try to reload the page';
+		errorMsgContainer.classList.add('catch-error-style');
 	}
 }
 
@@ -560,7 +576,9 @@ async function deleteFavoriteMovieFromDatabase(movie){
 		const docToDelete = docId[0];
 		await deleteDoc(doc(favoritesCollectionRef, docToDelete));
     } catch (err){
-        console.log(err.message);
+		const errorMsgContainer = document.querySelector('.favorite-movies-container');
+		errorMsgContainer.textContent = 'Try to reload the page';
+		errorMsgContainer.classList.add('catch-error-style');
     }
 }
 

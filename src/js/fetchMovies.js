@@ -14,7 +14,11 @@ const fetchMovies = async ()=>{
 		filterMovies(data);
 		await renderFirstMovieArray(data);
 	} catch (err){
-		console.log(err.message);
+		if(pathName.includes('index')){
+			const errorMsgContainer = document.querySelector('.main-content');
+			errorMsgContainer.textContent = 'Try to reload the page';
+			errorMsgContainer.classList.add('catch-error-style');
+		}
 	}
 }
 
@@ -27,7 +31,6 @@ if(pathName.includes('index.html')){
 }
 
 //REDNER FIRST MOVIE ARRAY ON FRONTPAGE ----------------------------------------------------
-let currentClickedContainerFrontpage = null;
 let currentClickedContainer = null;
 
 async function renderFirstMovieArray(movies) {
@@ -43,7 +46,9 @@ async function renderFirstMovieArray(movies) {
 			})
 		})
 	} catch(err){
-		console.log(err);
+		const errorMsgContainer = document.querySelector('.main-content');
+		errorMsgContainer.textContent = 'Try to reload the page';
+		errorMsgContainer.classList.add('catch-error-style');
 	}
 }
 

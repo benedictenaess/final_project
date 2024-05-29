@@ -11,6 +11,7 @@ const fetchGenreId = async ()=>{
 	} catch (err){
 		const errorMsgContainer = document.querySelector('.frontpage-movies-section');
 		errorMsgContainer.textContent = 'Try to reload the page';
+		errorMsgContainer.classList.add('catch-error-style');
 	}
 }
 
@@ -39,6 +40,7 @@ const filterMovies=(movies)=>{
 			} catch (err){
 				const errorMsgContainer = document.querySelector('.frontpage-movies-section');
 				errorMsgContainer.textContent = 'Try to reload the page';
+				errorMsgContainer.classList.add('catch-error-style');
 			}
 		})
 	})
