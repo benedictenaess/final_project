@@ -4,14 +4,16 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Final Project: Movie Database</title>
-	<link rel="stylesheet" href="style.css">
-	<link rel="stylesheet variables" href="variables.css">
+	<link rel="stylesheet" href="/src/css/style.css">
+	<link rel="stylesheet variables" href="/src/css/variables.css">
 </head>
 <body>
 	<header>
 		<div class="menu-bar">
 			<div class="hamburger-container">
-				<button class="hamburger-button">Menu</button>
+				<button class="hamburger-button">
+					<img src="../src/assets/hamburgerSymbol.png" alt="hamburger icon" class="hamburger-icon">
+				</button>
 			</div>
 			<nav class="header-page-nav">
 				<ul>
@@ -25,7 +27,10 @@
 			</div>
 		</div>
 	</header>
-	
+
+	<h1 class="frontpage-title">The Movie Database</h1>
+	<p class="frontpage-signin-info">Welcome to the movie database. Log in to find what movie to watch next, add them to favorites and leave a review.</p>
+
 	<section class="form-section">
 		<div class="form-section-container">
 			<div class="all-forms-container">
@@ -109,12 +114,11 @@
 	<section class="main-content">
 		<div class="render-username-container"></div>
 		<div class="frontpage-api-container">
-			<h1>The Movie Database</h1>
 			<p class="frontpage-info"></p>
 			<div class="frontpage-favorite-genre-container"></div>
-		</div>
-		<div class="divider">
-			<div class="divider-line"></div>
+			<div class="divider">
+				<div class="divider-line"></div>
+			</div>
 		</div>
 	</section>
 

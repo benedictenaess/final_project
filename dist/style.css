@@ -46,9 +46,16 @@ header {
 	visibility: hidden;
 	color: var(--color-accent-1);
 	font-size: var(--font-size-large);
-	text-shadow: 1px 1px 2px rgb(255, 0, 0);
-	border: 1px solid var(--color-accent-1);
 	border-radius: var(--border-radius);
+}
+
+.hamburger-button:hover {
+	transform: translate(4px, 4px);
+	box-shadow: none;
+}
+
+.hamburger-icon {
+	width: 50px;
 	padding: 0.3rem;
 }
 
@@ -99,11 +106,25 @@ header {
 
 .sign-out-button {
 	visibility: hidden;
-	color: var(--color-accent-1);
 	font-size: var(--font-size-base);
 	border: 1px solid var(--color-accent-1);
 	border-radius: var(--border-radius);
 	padding: 0.3rem;
+}
+
+.frontpage-title {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin-top: 5rem;
+	font-weight: 400;
+}
+
+.frontpage-signin-info {
+	display: none;
+	text-align: center;
+	font-size: var(--font-size-medium);
+	margin-top: 2rem;
 }
 
 /* SIGN-UP/IN FORM --------------------------------------------------------------------*/
@@ -256,7 +277,6 @@ input,
 	display: none;
 	width: 100%;
 	font-size: var(--font-size-extra-large);
-	margin-top: 5rem;
 }
 
 .render-username {
@@ -279,14 +299,6 @@ input,
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-}
-
-.frontpage-api-container h1{
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	padding: 0rem 5rem;
-	font-weight: 400;
 }
 
 .frontpage-api-container p {
@@ -324,6 +336,7 @@ input,
 	width: 100vw;
 	display: flex;
 	justify-content: center;
+	margin-top: 5rem;
 }
 
 .divider-line {
@@ -337,7 +350,7 @@ input,
 	display: none;
 	flex-direction: column;
 	width: 100%;
-	margin-top: 5rem;
+	margin-top: 8rem;
 	padding: 0rem 5rem;
 }
 
@@ -650,14 +663,12 @@ input,
 	}
 	.sign-out-button {
 		display: none;
-		color: var(--color-accent-1);
 		border: none;
 		border-radius: none;
 		font-size: var(--font-size-medium);
 		font-weight: bold;
 		text-shadow: 1px 1px 1px black;
-	}
-		
+	}	
 	.sign-out-button:hover {
 		color: var(--color-accent-2);
 		box-shadow: none;
@@ -686,14 +697,17 @@ input,
 	#genre {
 		width: 100%;
 	}
+	.frontpage-title {
+		display: flex;
+		margin-top: 2rem;
+		padding-left: 2rem;
+	}
 
 	/* MAINPAGE ------------------------------------------------------------------------ */
 	.main-content {
-		display: none;
 		width: 100%;
 		height: 100vh;
 		font-size: var(--font-size-large);
-		margin-top: 2rem;
 	}
 	.render-username {
 		text-align: center;
@@ -730,7 +744,7 @@ input,
 
 	/* ALL MOVIES MAINPAGE ----------------------------------------------------------------------------- */
 	.find-movie-section {
-		margin-top: -7rem;
+		margin-top: -14rem;
 		padding: 0rem 2rem;
 	}
 	.find-movie-info-container {

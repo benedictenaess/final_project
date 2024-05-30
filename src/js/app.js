@@ -329,22 +329,29 @@ const deleteAccount = async ()=>{
 
 //CHANGING DISPLAY SINGIN/OUT ------------------------------------------
 const movieSection = document.querySelector('.find-movie-section');
+const headerSection = document.querySelector('.menu-bar');
+const frontpageInfo = document.querySelector('.frontpage-signin-info');
+
 function signInDisplay(){
 	if(window.location.pathname === '/dist/index.html'){
 		signInForm.reset();
 		signUpForm.reset();
 		mainContentSection.style.display = 'block';
+		headerSection.style.display = 'flex';
 		movieSection.style.display = 'block';
 		formSection.style.display = 'none';
+		frontpageInfo.style.display = 'none';
 	}
 }
 
 function signOutDisplay(){
 	if(window.location.pathname === '/dist/index.html'){
 		mainContentSection.style.display = 'none';
+		headerSection.style.display = 'none';
 		movieSection.style.display = 'none';
 		formSection.style.display = 'block';
 		signInFormVisibility.style.display = 'block';
+		frontpageInfo.style.display = 'block';
 		signUpFormVisibility.style.display = 'none';
 		userNameElement.textContent = '';
 	}
