@@ -9,6 +9,7 @@ API-key is hidden on the backend.
 ## Table of Contents
 
 - [Usage](#usage)
+- [Dependencies](#dependencies)
 - [GitHub](#github)
 - [Credits](#credits)
 
