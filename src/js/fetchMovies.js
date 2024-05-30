@@ -23,11 +23,21 @@ const fetchMovies = async ()=>{
 }
 
 //SORTING MOVIES ----------------------------------------------------------
-
 if(pathName.includes('index.html')){
 	selectCategory.addEventListener('change', ()=>{
 		sortMovies(movieArray)
 	})
+}
+
+//ADD MOVIE TO FAVORITES --------------------------------------------------------
+function addToFavorites(movie, textArea){
+	if (textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!') {
+		const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
+		createFavoritesCollectionAndAddMovieToFavorites(movie, movieReview);
+	} else {
+		createFavoritesCollectionAndAddMovieToFavorites(movie);
+	}
+	textArea.value = 'Write Your Review Here!';
 }
 
 //REDNER FIRST MOVIE ARRAY ON FRONTPAGE ----------------------------------------------------
@@ -53,26 +63,15 @@ async function renderFirstMovieArray(movies) {
 }
 
 function displayFrontpageMovies(movie, genreName){
-	
 	const favoriteGenreContainer = document.querySelector('.frontpage-favorite-genre-container');
 	const frontpageHeaderInfo = document.querySelector('.frontpage-info');
 	const movieContainer = document.createElement('div');
 	const movieImg = document.createElement('img');
-	const addToFavorites = document.createElement('button');
+	const largeDisplayContainer = document.createElement('div');
 	const textArea = document.createElement('textarea');
-
-	addToFavorites.addEventListener('click',(e)=>{
-		e.preventDefault();
-		if(textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!'){
-			const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
-			createFavoritesCollectionAndAddMovieToFavorites(movie, movieReview);
-		} else {
-			createFavoritesCollectionAndAddMovieToFavorites(movie);
-		}
-	})
+	
 	frontpageHeaderInfo.textContent = `Check out new releases of your favorite movie genre: ${genreName}`;
 
-	const largeDisplayContainer = document.createElement('div');
 	favoriteGenreContainer.append(movieContainer, largeDisplayContainer);
 	movieContainer.append(movieImg);
 	movieImg.classList.add('frontpage-favorite-genre-img')
@@ -80,8 +79,9 @@ function displayFrontpageMovies(movie, genreName){
 	movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 
 	movieContainer.addEventListener('click', ()=>{
-		displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea, addToFavorites)
+		displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea)
 	})
+
 	largeDisplayContainer.addEventListener('click', (e) => {
 		removeLargeContainer(e, largeDisplayContainer, textArea)
 	});
@@ -95,20 +95,9 @@ function renderAllMovies(movies) {
     movies.forEach(movie => {
         const movieContainer = document.createElement('div');
         const movieImg = document.createElement('img');
-        const textArea = document.createElement('textarea');
-        const addToFavorites = document.createElement('button');
-
-        addToFavorites.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (textArea.value.trim() !== '' && textArea.value !== 'Write Your Review Here!') {
-                const movieReview = textArea.value.charAt(0).toUpperCase() + textArea.value.slice(1).toLocaleLowerCase();
-				createFavoritesCollectionAndAddMovieToFavorites(movie, movieReview)
-            } else {
-				createFavoritesCollectionAndAddMovieToFavorites(movie)
-            }
-        });
-
         const largeDisplayContainer = document.createElement('div');
+		const textArea = document.createElement('textarea');
+      
         allMoviesSection.append(movieContainer, largeDisplayContainer);
         movieContainer.append(movieImg);
 
@@ -116,24 +105,29 @@ function renderAllMovies(movies) {
         movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 		
         movieContainer.addEventListener('click', () => {
-			displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea, addToFavorites)
+			displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea)
         });
-
-        largeDisplayContainer.addEventListener('click', (e) => {
-            removeLargeContainer(e, largeDisplayContainer, textArea)
-        });
+		largeDisplayContainer.addEventListener('click', (e) => {
+			removeLargeContainer(e, largeDisplayContainer, textArea)
+		});
     });
 }
 
 //DISPLAY LARGE MOVIE CONTAINER --------------------------------------------------------
-function displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea, addToFavorites){
+function displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer, textArea){
 	const infoContainer = document.createElement('div');
 	const movieTitle = document.createElement('h4');
     const movieOverview = document.createElement('div');
     const movieReleaseDate = document.createElement('span');
     const movieRating = document.createElement('span');
 	const movieImgLarge = document.createElement('img');
+	const addToFavoritesButton = document.createElement('button');
 
+	addToFavoritesButton.addEventListener('click',(e)=>{
+		e.preventDefault();
+		addToFavorites(movie, textArea);
+	})
+	
 	if (currentClickedContainer !== null) {
 		currentClickedContainer.nextSibling.style.display = 'none';
 	}
@@ -143,13 +137,13 @@ function displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer
 	largeDisplayContainer.textContent = '';
 	largeDisplayContainer.style.display = 'flex';
 	largeDisplayContainer.append(movieImgLarge, infoContainer);
-	infoContainer.append(movieTitle, movieRating, movieOverview, movieReleaseDate, textArea, addToFavorites);
+	infoContainer.append(movieTitle, movieRating, movieOverview, movieReleaseDate, textArea, addToFavoritesButton);
 
 	movieReleaseDate.textContent = movie.release_date;
 	movieTitle.textContent = movie.title;
 	movieOverview.textContent = movie.overview;
-	textArea.textContent = 'Write Your Review Here!';
-	addToFavorites.textContent = 'Add to Favorites';
+	textArea.value = 'Write Your Review Here!';
+	addToFavoritesButton.textContent = 'Add to Favorites';
 	movieRating.textContent = `Rating: ${movie.vote_average.toFixed(1)}`;
 	movieImgLarge.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 
@@ -160,11 +154,11 @@ function displayLargeMovieContainer(movie, movieContainer, largeDisplayContainer
 
 //REMOVE LARGE MOVIE DISPLAY ------------------------------------------------------
 function removeLargeContainer(e, largeDisplayContainer, textArea){
-	if (e.target !== textArea && e.target) {
+	if (e.target === textArea){
+		textArea.value = '';
+	} else {
 		largeDisplayContainer.style.display = 'none';
 		currentClickedContainer = null;
-	} else {
-		textArea.textContent = '';
 	}
 }
 

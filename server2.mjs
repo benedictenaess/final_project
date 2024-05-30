@@ -15,7 +15,7 @@ const options = {
 app.use(cors());
 
 app.listen(PORT, ()=>{
-	console.log(`Server is running on ${PORT}`);
+	console.log(`THE SERVER IS RUNNING ON PORT: ${PORT}`);
 })
 
 const {API_KEY} = process.env

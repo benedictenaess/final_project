@@ -27,7 +27,7 @@ const database = getFirestore();
 const usersCollection = collection(database, 'users');
 
 //HAMBURGER MENU -----------------------------------------------------------------------------
-const menuToggleButton = document.querySelector('.header-logo');
+const menuToggleButton = document.querySelector('.hamburger-button');
 const homeNavButton = document.querySelector('.home-nav');
 const favoritesNavButton = document.querySelector('.favorites-nav');
 const profileNavButton = document.querySelector('.profile-nav');
@@ -469,7 +469,6 @@ const favoriteMoviesContainer = document.querySelector('.favorite-movies-contain
 async function displayFavorites(){
 	try {
         favoriteMoviesContainer.textContent = '';
-
 		const currentSignedinUseronAuth = authService.currentUser;
 		const signedInUserUid = currentSignedinUseronAuth.uid;
 
@@ -490,10 +489,15 @@ async function displayFavorites(){
 		const favoritesCollectionRef = collection(currentUserDatabase, 'favorites');
 		const querySnapshot2 = await getDocs(favoritesCollectionRef); 
 		const favoriteMovies = querySnapshot2.docs.map(doc => doc.data());
-    
-        favoriteMovies.forEach(movie => {
-            renderFavoriteMovies(movie);
-        });
+
+		if(favoriteMovies.length === 0){
+			favoriteMoviesContainer.textContent = 'You have not added any movies to favorites. Go to the home page an add your first movie!';
+		} else {
+			favoriteMovies.forEach(movie => {
+				renderFavoriteMovies(movie);
+			});
+		}
+
     } catch (err) {
 		const errorMsgContainer = document.querySelector('.favorite-movies-container');
 		errorMsgContainer.textContent = 'Try to reload the page';
