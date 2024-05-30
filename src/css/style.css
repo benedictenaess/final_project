@@ -106,6 +106,7 @@ header {
 
 .sign-out-button {
 	visibility: hidden;
+	color: var(--color-accent-1);
 	font-size: var(--font-size-base);
 	border: 1px solid var(--color-accent-1);
 	border-radius: var(--border-radius);
@@ -665,6 +666,7 @@ input,
 		display: none;
 		border: none;
 		border-radius: none;
+		color: var(--color-primary);
 		font-size: var(--font-size-medium);
 		font-weight: bold;
 		text-shadow: 1px 1px 1px black;
@@ -732,23 +734,19 @@ input,
 	.frontpage-favorite-genre-container img {
 		height: 350px;
 	}
-	.large-movie-container-frontpage {
-		flex-direction: column;
-		width: 80%;
-		height: 80%;
-		overflow-y: auto;
-	}
+
 	.divider {
 		margin-top: 6rem;
 	}
 
 	/* ALL MOVIES MAINPAGE ----------------------------------------------------------------------------- */
 	.find-movie-section {
-		margin-top: -14rem;
+		margin-top: 2rem;
 		padding: 0rem 2rem;
 	}
 	.find-movie-info-container {
 		width: 100%;
+		margin-top: 2rem;
 	}
 	.frontpage-movies-section {
 		gap: 0rem;

@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This project is a movie database that is build with HTML, CSS and JavaScript. It utilizes Firebase Authentication for user authentication and Firestore Database for storing user data. Users need to create an account to use the webpage. When logged in the user can access the films, read information about the films, add them to favorite, add a review, and delete their account.
+This project is a movie database that is build with HTML, CSS and JavaScript. It utilizes Firebase Authentication for user authentication and Firestore Database for storing user data. Users need to create an account to use the webpage. When logged in the user can access the films, read information about the films, add them to favorite, add a review, and delete their account. The movies are fetched on the backend from The Movie Database API.
 
-API-key are hidden in the backend.
+API-key is hidden on the backend.
 
 ## Table of Contents
 
